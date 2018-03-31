@@ -31,7 +31,7 @@ public class ApplicationFrame extends JFrame {
         this.setSize(size, size);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        this.gamePanel = new BoardPanel(size, panelSize);        
+        this.gamePanel = new BoardPanel(this, size, panelSize);        
     }
     
     /* Sets the position of the window (x, y), the size of the window and the size of an individual cell of the game. (Higher size, less cells) **/
@@ -54,9 +54,6 @@ public class ApplicationFrame extends JFrame {
 
             @Override
             public void keyPressed(KeyEvent ke) {
-
-                System.err.println(ke.getKeyCode());
-
                 /* Arrow keys */
                 switch (ke.getKeyCode()) {
 

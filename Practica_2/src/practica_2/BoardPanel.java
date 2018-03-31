@@ -40,7 +40,10 @@ public class BoardPanel extends JPanel {
     
     private int points;
     
-    BoardPanel(int size, int panelSize) {
+    ApplicationFrame parentFrame;
+    
+    BoardPanel(ApplicationFrame parent, int size, int panelSize) {
+        this.parentFrame = parent;
         this.panelSize = panelSize;
         this.rows = size / panelSize;
         this.cols = rows;
@@ -154,7 +157,7 @@ public class BoardPanel extends JPanel {
         } else {
             if (newHead.equals(reward)) {
                 points++;
-                System.out.println("Puntos: " + points);
+                parentFrame.setTitle("Puntos: " + points);
                 increaseSnake();
                 moveReward();
             }
@@ -206,6 +209,7 @@ public class BoardPanel extends JPanel {
     
     private void restartSnake() {
         points = 0;
+        parentFrame.setTitle("Puntos: " + points);
         snakeSize = 5;
         this.snake = new ArrayList<>();
         for (int i = 0; i < snakeSize; i++) {
