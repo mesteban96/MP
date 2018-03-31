@@ -16,6 +16,7 @@ public class Practica_2 {
      */
     public static void main(String[] args) {
         ApplicationFrame guiFrame = new ApplicationFrame();
+        guiFrame.init();
     }
     
 }
