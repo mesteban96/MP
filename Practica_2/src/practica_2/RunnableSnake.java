@@ -16,18 +16,36 @@ public class RunnableSnake implements Runnable {
 
     private InternalSnakeState internalSnake;
     private boolean isAlive;
-
+    Thread timer;
     public RunnableSnake(InternalSnakeState snake) {
         internalSnake = snake;
         isAlive = true;
+        
+        timer = new Thread(() -> {
+            try {
+                this.internalSnake.setTime(0);
+                while (true) {
+                    this.internalSnake.increaseTime(100);
+                    Thread.sleep(100);
+
+                }
+            } catch (InterruptedException ex) {
+                Logger.getLogger(InternalSnakeState.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
     }
     
     public synchronized void finish () {
         isAlive = false;
     }
+    
+    public synchronized boolean isAlive(){
+        return this.isAlive;
+    }
 
     @Override
     public synchronized void run() {
+        this.timer.start();
         while (isAlive) {
             try {
                 internalSnake.moveSnake();

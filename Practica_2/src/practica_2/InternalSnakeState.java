@@ -5,11 +5,14 @@
  */
 package practica_2;
 
+import com.sun.webkit.Timer;
 import java.awt.Color;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -32,39 +35,49 @@ public class InternalSnakeState extends Observable {
     private Color cellColor;
 
     private Point reward;
-    
+
     private RunnableSnake snakeMover;
-    
-    private boolean restartGame = false;
+
+    private double time;
+
+    /**
+     * Operations : * 0 = Do nothing * 1 = Restart Game * 2 = Paint cell * 3 =
+     * Get Time
+     */
+    private int operation = 0;
+
+
 
     public InternalSnakeState(int size, int panelSize) {
         this.rows = size / panelSize;
         this.cols = rows;
-        
+        this.time = 0;
     }
-    
-    public void initGame(){
+
+    public void initGame() {
         snakeMover = new RunnableSnake(this);
         restartGame();
+
+        (new Thread(snakeMover)).start();
+
         
-        (new Thread(snakeMover) ).start();
     }
 
     private void restartGame() {
-        
-        this.restartGame = true;
+
+        this.operation = 1;
         setChanged();
         notifyObservers();
-        
+
         snakeMover.finish();
         restartSnake();
-        
+
         snakeMover = new RunnableSnake(this);
-        (new Thread(snakeMover) ).start();
-        
+        (new Thread(snakeMover)).start();
+
         reward = new Point();
         moveReward();
-        
+
     }
 
     public Point getCellToDraw() {
@@ -75,10 +88,14 @@ public class InternalSnakeState extends Observable {
         return cellColor;
     }
 
-    public boolean isRestartGame() {
-        return restartGame;
+    /**
+     *
+     * @return Operations : 0 = Do nothing 1 = Restart Game 2 = Paint cell 3 =
+     * Get Time
+     */
+    public int getOperation() {
+        return operation;
     }
-    
 
     private void restartSnake() {
         points = 0;
@@ -153,7 +170,7 @@ public class InternalSnakeState extends Observable {
 
         this.cellToDraw = p;
         this.cellColor = c;
-        this.restartGame = false;
+        this.operation = 2;
         setChanged();
         notifyObservers();
     }
@@ -190,4 +207,19 @@ public class InternalSnakeState extends Observable {
         }
     }
 
+    public synchronized void increaseTime(double time) {
+        this.operation = 3;
+        this.time += time / 1000;
+        setChanged();
+        notifyObservers();
+    }
+
+    public synchronized double getTime() {
+        
+        return (double)Math.round(this.time * 1000d) / 1000d;
+    }
+
+    public synchronized void setTime(double time) {
+        this.time = time;
+    }
 }

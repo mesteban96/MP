@@ -102,7 +102,6 @@ public class BoardPanel extends JPanel implements Observer {
     }
     
     private void repaintBoard() {
-        System.out.println("Repainting");
         gameCells.forEach((cell) -> {
             cell.setBackground(Color.white);
         });
@@ -113,11 +112,16 @@ public class BoardPanel extends JPanel implements Observer {
 	public void update(Observable arg0, Object arg1) 
 	{
             
-            if (internalSnakeState.isRestartGame()){
-                System.out.println(internalSnakeState.isRestartGame());
+            if (internalSnakeState.getOperation() == 1){
                 this.restartGame();
-            } else {
+            } 
+            
+            if (internalSnakeState.getOperation() == 2){
                 this.drawCell(internalSnakeState.getCellToDraw(), internalSnakeState.getCellColor());
+            }
+            
+            if (internalSnakeState.getOperation() == 3){
+                parentFrame.setTitle("Time: " + internalSnakeState.getTime());
             }
 	
 	}
