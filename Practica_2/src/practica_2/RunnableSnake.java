@@ -14,11 +14,11 @@ import java.util.logging.Logger;
  */
 public class RunnableSnake implements Runnable {
 
-    private BoardPanel gamePanel;
+    private InternalSnakeState internalSnake;
     private boolean isAlive;
 
-    public RunnableSnake(BoardPanel panel) {
-        gamePanel = panel;
+    public RunnableSnake(InternalSnakeState snake) {
+        internalSnake = snake;
         isAlive = true;
     }
     
@@ -30,7 +30,7 @@ public class RunnableSnake implements Runnable {
     public synchronized void run() {
         while (isAlive) {
             try {
-                gamePanel.moveSnake();
+                internalSnake.moveSnake();
                 /* Less number == higherSpeed*/
                 Thread.sleep(100);
             } catch (InterruptedException ex) {

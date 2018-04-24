@@ -25,18 +25,21 @@ public class ApplicationFrame extends JFrame {
 
     
     BoardPanel gamePanel;
+    private InternalSnakeState internalSnakeState;
 
-    public ApplicationFrame(int x, int y, int size, int panelSize) {
+    public ApplicationFrame(int x, int y, int size, int panelSize, InternalSnakeState snakeState) {
         this.setLocation(x, y);
         this.setSize(size, size);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.internalSnakeState = snakeState;
+        this.gamePanel = new BoardPanel(this, size, panelSize, this.internalSnakeState);   
         
-        this.gamePanel = new BoardPanel(this, size, panelSize);        
+        internalSnakeState.addObserver(gamePanel);
     }
     
     /* Sets the position of the window (x, y), the size of the window and the size of an individual cell of the game. (Higher size, less cells) **/
-    public ApplicationFrame() {
-        this(100, 100, 800, 30);
+    public ApplicationFrame(InternalSnakeState snakeState) {
+        this(100, 100, 800, 30, snakeState);
     }
     
     public void init(){
@@ -59,25 +62,25 @@ public class ApplicationFrame extends JFrame {
 
                     case 37:
                     case 65: { //Left arrow key
-                        gamePanel.changeDirectionX(-1);
+                        internalSnakeState.changeDirectionX(-1);
                         break;
                     }
 
                     case 38:
                     case 87: { //Up arrow key
-                        gamePanel.changeDirectionY(-1);
+                        internalSnakeState.changeDirectionY(-1);
                         break;
                     }
 
                     case 39:
                     case 68: { //Right arrow key
-                        gamePanel.changeDirectionX(1);
+                        internalSnakeState.changeDirectionX(1);
                         break;
                     }
 
                     case 40:
                     case 83: { //Down arrow key
-                        gamePanel.changeDirectionY(1);
+                        internalSnakeState.changeDirectionY(1);
                         break;
                     }
                 }

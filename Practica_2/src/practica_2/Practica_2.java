@@ -15,8 +15,27 @@ public class Practica_2 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        ApplicationFrame guiFrame = new ApplicationFrame();
+        startApp();
+    }
+    
+    private static void startApp(){
+        startApp(100, 0, 500, 30);
+    }
+    private static void startApp(int x, int y, int size, int panelSize){
+        InternalSnakeState internalState = new InternalSnakeState(size, panelSize);
+        ApplicationFrame guiFrame = new ApplicationFrame(x, y, size, panelSize, internalState);
+        ApplicationFrame guiFrame2 = new ApplicationFrame(x + size + 50, y, size, panelSize, internalState);
+        
+        ApplicationFrame guiFrame3 = new ApplicationFrame(x, y + size + 50, size, panelSize, internalState);
+        ApplicationFrame guiFrame4 = new ApplicationFrame(x + size + 50, y + size + 50, size, panelSize, internalState);
         guiFrame.init();
+        guiFrame2.init();
+        guiFrame3.init();
+        guiFrame4.init();
+        
+        internalState.initGame();
+        
+        
     }
     
 }
