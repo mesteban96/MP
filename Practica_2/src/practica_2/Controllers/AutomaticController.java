@@ -12,16 +12,16 @@ import practica_2.Model.InternalSnakeState;
  * @author ivan
  */
 public class AutomaticController extends AbstractController {
-    
+
     private AutomaticPlayer automaticPlayer;
     Thread t;
 
     public AutomaticController(InternalSnakeState internalSnakeState, int id) {
         super(internalSnakeState, id);
-        
-        t = new Thread (automaticPlayer);
+
+        t = new Thread(automaticPlayer);
     }
-    
+
     public void start() {
         t.start();
     }
@@ -30,5 +30,5 @@ public class AutomaticController extends AbstractController {
         internalSnake.changeDirectionX(dirX, id);
         internalSnake.changeDirectionY(dirY, id);
     }
-    
+
 }

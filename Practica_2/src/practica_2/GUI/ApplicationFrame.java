@@ -25,10 +25,9 @@ import practica_2.Model.InternalSnakeState;
  */
 public class ApplicationFrame extends JFrame {
 
-    
     BoardPanel gamePanel;
     private InternalSnakeState internalSnakeState;
-    
+
     private AbstractController controller;
 
     public ApplicationFrame(int x, int y, int size, int panelSize, InternalSnakeState snakeState) {
@@ -36,27 +35,29 @@ public class ApplicationFrame extends JFrame {
         this.setSize(size, size);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.internalSnakeState = snakeState;
-        this.gamePanel = new BoardPanel(this, size, panelSize, this.internalSnakeState);   
-        
+        this.gamePanel = new BoardPanel(this, size, panelSize, this.internalSnakeState);
+
         internalSnakeState.addObserver(gamePanel);
 
     }
-    
+
     /* Sets the position of the window (x, y), the size of the window and the size of an individual cell of the game. (Higher size, less cells) **/
     public ApplicationFrame(InternalSnakeState snakeState) {
         this(100, 100, 800, 30, snakeState);
     }
-    
-    public void setController (AbstractController controller) {
+
+    public void setController(AbstractController controller) {
         this.controller = controller;
     }
-    
-    public void init(){
+
+    public void init() {
         this.gamePanel.initGame();
         initEvents();
         this.getContentPane().add(gamePanel);
         this.setVisible(true);
-    };
+    }
+
+    ;
 
     private void initEvents() {
         this.addKeyListener(new KeyListener() {
@@ -89,7 +90,7 @@ public class ApplicationFrame extends JFrame {
 
                     case 40:
                     case 83: { //Down arrow key
-                        controller.move(0,1);
+                        controller.move(0, 1);
                         break;
                     }
                 }

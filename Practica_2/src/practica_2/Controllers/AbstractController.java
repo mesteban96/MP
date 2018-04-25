@@ -12,15 +12,14 @@ import practica_2.Model.InternalSnakeState;
  * @author ivan
  */
 public abstract class AbstractController {
-    
+
     InternalSnakeState internalSnake;
     protected int id;
-    
-    public AbstractController(InternalSnakeState internalSnakeState, int id){
+
+    public AbstractController(InternalSnakeState internalSnakeState, int id) {
         this.internalSnake = internalSnakeState;
         this.id = id;
     }
-    
-    
+
     public abstract void move(int dirX, int dirY);
 }

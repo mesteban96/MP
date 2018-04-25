@@ -42,25 +42,22 @@ public class InternalSnakeState extends Observable {
     private RunnableSnake snakeMover;
 
     private Double time;
-    
+
     private int numPlayers;
-    
 
     /**
      * Operations : * 0 = Do nothing * 1 = Restart Game * 2 = Paint cell * 3 =
      * Get Time
      */
-    
     private int operation = 0;
 
     public InternalSnakeState(int size, int panelSize) {
         this.rows = size / panelSize;
         this.cols = rows;
         this.restartPlayers();
-        
     }
-    
-    private void restartPlayers (){
+
+    private void restartPlayers() {
         this.numPlayers = 0;
         snakes = new ArrayList<>();
         this.size = new ArrayList<>();
@@ -68,26 +65,25 @@ public class InternalSnakeState extends Observable {
         this.speed = new ArrayList<>();
         this.time = 0d;
     }
-    
+
     public int addPlayer() {
-        snakes.add(new ArrayList<> ());
+        snakes.add(new ArrayList<>());
         points.add(0);
-        size.add(5);
-        
+        size.add(10);
+
         int randomX = ThreadLocalRandom.current().nextInt(0, this.cols);
         int randomY = ThreadLocalRandom.current().nextInt(0, this.rows);
-        
+
         for (int i = 0; i < size.get(numPlayers); i++) {
             snakes.get(numPlayers).add(new Point(randomX, randomY));
         }
 
-        speed.add(new Integer [2]);
+        speed.add(new Integer[2]);
         speed.get(numPlayers)[0] = 1;
         speed.get(numPlayers)[1] = 0;
-        
 
         numPlayers++;
-        return numPlayers-1;
+        return numPlayers - 1;
     }
 
     public void initGame() {
@@ -95,31 +91,30 @@ public class InternalSnakeState extends Observable {
         reward = new Point();
         moveReward();
         (new Thread(snakeMover)).start();
-
     }
-    
-    private void restartSnakes () {
-        for (int i = 0; i < numPlayers; i++) {
+
+    private void restartSnakes(int players) {
+        for (int i = 0; i < players; i++) {
             this.addPlayer();
         }
     }
 
     private void restartGame() {
 
+        snakeMover.pause();
         this.operation = 1;
         setChanged();
         notifyObservers();
-
-        snakeMover.finish();
-        this.restartPlayers();
-        restartSnakes();
-
-        snakeMover = new RunnableSnake(this);
-        (new Thread(snakeMover)).start();
+        int players = numPlayers;
+        restartPlayers();
+        restartSnakes(players);
+        numPlayers = players;
 
         reward = new Point();
         moveReward();
 
+        snakeMover.resume();
+        System.out.println("Resume");
     }
 
     public Point getCellToDraw() {
@@ -138,8 +133,6 @@ public class InternalSnakeState extends Observable {
     public int getOperation() {
         return operation;
     }
-    
-    
 
     private void shiftRight(int id) {
         //make a loop to run through the array list
@@ -183,7 +176,7 @@ public class InternalSnakeState extends Observable {
             restartGame();
         } else {
             if (newHead.equals(reward)) {
-                points.set(id, points.get(id)+1);
+                points.set(id, points.get(id) + 1);
                 increaseSnake(id);
                 moveReward();
             }
@@ -192,16 +185,16 @@ public class InternalSnakeState extends Observable {
             drawCell(newHead, Color.ORANGE);
         }
     }
-    
-    public synchronized void moveSnakes () {
-       for (int i = 0; i < this.numPlayers; i++) {
-           moveSnake(i);
-       }
+
+    public synchronized void moveSnakes() {
+        for (int i = 0; i < this.numPlayers; i++) {
+            moveSnake(i);
+        }
     }
 
     /* Return true if the snake collides with a point */
     private boolean checkSnakeCollition(Point pos) {
-        for (List<Point> snake : snakes){
+        for (List<Point> snake : snakes) {
             if (snake.contains(pos)) {
                 return true;
             }
@@ -212,7 +205,7 @@ public class InternalSnakeState extends Observable {
     public void drawCell(Point p, Color c) {
 
         this.cellToDraw = p;
-        this.cellColor =  c;
+        this.cellColor = c;
         this.operation = 2;
         setChanged();
         notifyObservers();
@@ -222,7 +215,7 @@ public class InternalSnakeState extends Observable {
         /* Increases the snake lenght by 3*/
         for (int i = 0; i < 3; i++) {
             snakes.get(id).add(new Point(snakes.get(id).get(size.get(id) - 1)));
-            size.set(id, size.get(id)+1);
+            size.set(id, size.get(id) + 1);
         }
     }
 

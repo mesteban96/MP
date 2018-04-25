@@ -22,21 +22,20 @@ import practica_2.Model.InternalSnakeState;
  * @author Ramon Campayo_2
  */
 public class BoardPanel extends JPanel implements Observer {
-    
+
     private GridLayout fieldLayout;
-    
+
     private int cols, rows;
-    
+
     private int panelSize;
     private final int gap = 1;
-    
-    
+
     private InternalSnakeState internalSnakeState;
-    
+
     private ArrayList<JPanel> gameCells;
-    
+
     ApplicationFrame parentFrame;
-    
+
     BoardPanel(ApplicationFrame parent, int size, int panelSize, InternalSnakeState snakeState) {
         this.parentFrame = parent;
         this.panelSize = panelSize;
@@ -44,28 +43,28 @@ public class BoardPanel extends JPanel implements Observer {
         this.cols = rows;
         this.internalSnakeState = snakeState;
     }
-    
+
     public void initGame() {
         initComponents();
         configureComponents();
-        
+
         restartSnake();
-         
+
     }
-    
+
     private void initComponents() {
         fieldLayout = new GridLayout(rows, cols);
         gameCells = new ArrayList<>();
-        
+
     }
-    
+
     private void configureComponents() {
         fieldLayout.setHgap(gap);
         fieldLayout.setVgap(gap);
-        
+
         this.setBackground(Color.BLACK);
         this.setLayout(fieldLayout);
-        
+
         JPanel newPanel;
         int i = 0;
         int j = 0;
@@ -79,53 +78,48 @@ public class BoardPanel extends JPanel implements Observer {
         }
         //System.err.println("Rows: " + i + "   Cols : " + j + " Size : " + panelSize + " Array : " + gameCells.size());
     }
-    
+
     private void startBoard() {
-        
-   
- }
-    
+
+    }
 
     private void drawCell(Point p, Color color) {
         int position = (int) (p.getY() * cols + p.getX());
         gameCells.get(position).setBackground(color);
     }
-    
-    
-    private void restartGame() {  
+
+    private void restartGame() {
         repaintBoard();
         restartSnake();
-        
+
     }
-    
+
     private void restartSnake() {
         gameCells.get(0).setBackground(Color.white);
     }
-    
+
     private void repaintBoard() {
         gameCells.forEach((cell) -> {
             cell.setBackground(Color.white);
         });
     }
-    
-    
+
     @Override
-	public void update(Observable arg0, Object arg1) 
-	{
-            
-            if (internalSnakeState.getOperation() == 1){
-                this.restartGame();
-                System.out.println(internalSnakeState.getOperation());
-            } 
-            
-            if (internalSnakeState.getOperation() == 2){
-                this.drawCell(internalSnakeState.getCellToDraw(), internalSnakeState.getCellColor());
-            }
-            
-            if (internalSnakeState.getOperation() == 3){
-                parentFrame.setTitle("Time: " + internalSnakeState.getTime());
-            }
-	
-	}
+    public void update(Observable arg0, Object arg1) {
+
+        if (internalSnakeState.getOperation() == 1) {
+            this.restartGame();
+            System.out.println(internalSnakeState.getOperation());
+        }
+
+        if (internalSnakeState.getOperation() == 2) {
+            this.drawCell(internalSnakeState.getCellToDraw(), internalSnakeState.getCellColor());
+        }
+
+        if (internalSnakeState.getOperation() == 3) {
+            parentFrame.setTitle("Time: " + internalSnakeState.getTime());
+        }
+
+    }
 
 }

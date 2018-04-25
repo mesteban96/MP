@@ -11,7 +11,7 @@ import practica_2.Model.InternalSnakeState;
  *
  * @author ivan
  */
-public class HumanController extends AbstractController{
+public class HumanController extends AbstractController {
 
     public HumanController(InternalSnakeState internalSnakeState, int id) {
         super(internalSnakeState, id);
@@ -19,8 +19,12 @@ public class HumanController extends AbstractController{
 
     @Override
     public synchronized void move(int dirX, int dirY) {
-        internalSnake.changeDirectionX(dirX, id);
-        internalSnake.changeDirectionY(dirY, id);
+        if (dirX != 0) {
+            internalSnake.changeDirectionX(dirX, id);
+        }
+        if (dirY != 0) {
+            internalSnake.changeDirectionY(dirY, id);
+        }
     }
-    
+
 }

@@ -10,28 +10,28 @@ package practica_2.Controllers;
  * @author ivan
  */
 public class AutomaticPlayer implements Runnable {
-    
+
     private boolean running = true;
     private boolean paused = false;
     private volatile Object pauseLock = new Object();
-    
+
     private AutomaticController automaticContoller;
-    
-    public AutomaticPlayer (AutomaticController automatic){
+
+    public AutomaticPlayer(AutomaticController automatic) {
         this.automaticContoller = automatic;
     }
 
     @Override
-    public void run () {
-        while (running){
+    public void run() {
+        while (running) {
             synchronized (pauseLock) {
                 if (!running) { // may have changed while waiting to
-                                // synchronize on pauseLock
+                    // synchronize on pauseLock
                     break;
                 }
                 if (paused) {
                     try {
-                        pauseLock.wait(); 
+                        pauseLock.wait();
                     } catch (InterruptedException ex) {
                         break;
                     }
@@ -63,11 +63,12 @@ public class AutomaticPlayer implements Runnable {
             pauseLock.notifyAll(); // Unblocks thread
         }
     }
-    
-    private void movementAlgorithm () {
-        
+
+    private synchronized void movementAlgorithm() {
+
         /* Algorithm */
         this.automaticContoller.move(1, 0);
-};
-    
+    }
+;
+
 }
