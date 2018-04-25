@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package practica_2;
+package practica_2.GUI;
 
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -15,6 +15,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
+import practica_2.Model.InternalSnakeState;
 
 /**
  *
@@ -114,6 +115,7 @@ public class BoardPanel extends JPanel implements Observer {
             
             if (internalSnakeState.getOperation() == 1){
                 this.restartGame();
+                System.out.println(internalSnakeState.getOperation());
             } 
             
             if (internalSnakeState.getOperation() == 2){

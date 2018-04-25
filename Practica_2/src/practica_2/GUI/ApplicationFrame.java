@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package practica_2;
+package practica_2.GUI;
 
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -16,6 +16,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import practica_2.Controllers.AbstractController;
+import practica_2.Model.InternalSnakeState;
 
 /**
  *
@@ -26,6 +28,8 @@ public class ApplicationFrame extends JFrame {
     
     BoardPanel gamePanel;
     private InternalSnakeState internalSnakeState;
+    
+    private AbstractController controller;
 
     public ApplicationFrame(int x, int y, int size, int panelSize, InternalSnakeState snakeState) {
         this.setLocation(x, y);
@@ -35,11 +39,16 @@ public class ApplicationFrame extends JFrame {
         this.gamePanel = new BoardPanel(this, size, panelSize, this.internalSnakeState);   
         
         internalSnakeState.addObserver(gamePanel);
+
     }
     
     /* Sets the position of the window (x, y), the size of the window and the size of an individual cell of the game. (Higher size, less cells) **/
     public ApplicationFrame(InternalSnakeState snakeState) {
         this(100, 100, 800, 30, snakeState);
+    }
+    
+    public void setController (AbstractController controller) {
+        this.controller = controller;
     }
     
     public void init(){
@@ -62,29 +71,28 @@ public class ApplicationFrame extends JFrame {
 
                     case 37:
                     case 65: { //Left arrow key
-                        internalSnakeState.changeDirectionX(-1);
+                        controller.move(-1, 0);
                         break;
                     }
 
                     case 38:
                     case 87: { //Up arrow key
-                        internalSnakeState.changeDirectionY(-1);
+                        controller.move(0, -1);
                         break;
                     }
 
                     case 39:
                     case 68: { //Right arrow key
-                        internalSnakeState.changeDirectionX(1);
+                        controller.move(1, 0);
                         break;
                     }
 
                     case 40:
                     case 83: { //Down arrow key
-                        internalSnakeState.changeDirectionY(1);
+                        controller.move(0,1);
                         break;
                     }
                 }
-
             }
 
             @Override

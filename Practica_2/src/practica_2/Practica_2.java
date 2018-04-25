@@ -5,6 +5,12 @@
  */
 package practica_2;
 
+import practica_2.Controllers.AbstractController;
+import practica_2.Controllers.AutomaticController;
+import practica_2.Controllers.HumanController;
+import practica_2.Model.InternalSnakeState;
+import practica_2.GUI.ApplicationFrame;
+
 /**
  *
  * @author ivanm
@@ -19,19 +25,22 @@ public class Practica_2 {
     }
     
     private static void startApp(){
-        startApp(100, 0, 500, 30);
+        startApp(100, 0, 800, 10);
     }
     private static void startApp(int x, int y, int size, int panelSize){
         InternalSnakeState internalState = new InternalSnakeState(size, panelSize);
-        ApplicationFrame guiFrame = new ApplicationFrame(x, y, size, panelSize, internalState);
-        ApplicationFrame guiFrame2 = new ApplicationFrame(x + size + 50, y, size, panelSize, internalState);
         
-        ApplicationFrame guiFrame3 = new ApplicationFrame(x, y + size + 50, size, panelSize, internalState);
-        ApplicationFrame guiFrame4 = new ApplicationFrame(x + size + 50, y + size + 50, size, panelSize, internalState);
+        
+        ApplicationFrame guiFrame = new ApplicationFrame(x, y, size, panelSize, internalState);
         guiFrame.init();
-        guiFrame2.init();
-        guiFrame3.init();
-        guiFrame4.init();
+        AbstractController controller1 = new HumanController(internalState, internalState.addPlayer());
+        guiFrame.setController(controller1);
+        
+        AutomaticController controller2 = new AutomaticController(internalState, internalState.addPlayer());
+        AutomaticController controller3 = new AutomaticController(internalState, internalState.addPlayer());
+        
+        controller2.start();
+        controller3.start();
         
         internalState.initGame();
         

@@ -5,6 +5,8 @@
  */
 package practica_2;
 
+import practica_2.Model.InternalSnakeState;
+import practica_2.GUI.ApplicationFrame;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,7 +29,6 @@ public class RunnableSnake implements Runnable {
                 while (true) {
                     this.internalSnake.increaseTime(100);
                     Thread.sleep(100);
-
                 }
             } catch (InterruptedException ex) {
                 Logger.getLogger(InternalSnakeState.class.getName()).log(Level.SEVERE, null, ex);
@@ -48,7 +49,7 @@ public class RunnableSnake implements Runnable {
         this.timer.start();
         while (isAlive) {
             try {
-                internalSnake.moveSnake();
+                internalSnake.moveSnakes();
                 /* Less number == higherSpeed*/
                 Thread.sleep(100);
             } catch (InterruptedException ex) {
