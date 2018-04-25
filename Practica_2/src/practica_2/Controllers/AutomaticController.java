@@ -19,16 +19,19 @@ public class AutomaticController extends AbstractController {
     public AutomaticController(InternalSnakeState internalSnakeState, int id) {
         super(internalSnakeState, id);
 
-        t = new Thread(automaticPlayer);
+        automaticPlayer = new AutomaticPlayer(this);
     }
 
     public void start() {
-        t.start();
+        (new Thread(this.automaticPlayer)).start();
     }
 
+    @Override
     public synchronized void move(int dirX, int dirY) {
-        internalSnake.changeDirectionX(dirX, id);
-        internalSnake.changeDirectionY(dirY, id);
+        if (dirX != 0) {
+            internalSnake.changeDirectionX(dirX, id);
+        } else {
+            internalSnake.changeDirectionY(dirY, id);
+        }
     }
-
 }

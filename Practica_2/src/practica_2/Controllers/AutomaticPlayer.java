@@ -5,6 +5,9 @@
  */
 package practica_2.Controllers;
 
+import java.awt.Point;
+import java.util.List;
+
 /**
  *
  * @author ivan
@@ -66,9 +69,42 @@ public class AutomaticPlayer implements Runnable {
 
     private synchronized void movementAlgorithm() {
 
-        /* Algorithm */
-        this.automaticContoller.move(1, 0);
+        List<List<Point>> snakes = automaticContoller.internalSnake.getSnakes();
+        Point reward = automaticContoller.internalSnake.getReward();
+        int id = automaticContoller.id;
+        Integer[] speed = automaticContoller.internalSnake.getSpeed(id);
+
+        speed = this.pointToReward(reward, snakes.get(id).get(0), speed);
+        
+        correctMovement();
+        
+        this.automaticContoller.move(speed[0], speed[1]);
+        //this.pause();
+        
+        
     }
-;
+    
+    
+    private void correctMovement () {
+        
+    }
+    
+    
+    private Integer [] pointToReward(Point reward, Point head, Integer[] speed) {
+        /* No puede cambiar la speed[x], solo a 0*/
+        if (speed[0] != 0) {
+            if (reward.y != head.y) {
+                speed[1] = (reward.y < head.y) ? -1 : 1;
+                speed[0] = 0;
+            }
+        } else {
+
+            if (reward.x != head.x) {
+                speed[0] = (reward.x < head.x) ? -1 : 1;
+                speed[1] = 0;
+            }
+        }
+        return speed;
+    }
 
 }

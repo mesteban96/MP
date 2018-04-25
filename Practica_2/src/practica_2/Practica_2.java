@@ -25,7 +25,7 @@ public class Practica_2 {
     }
 
     private static void startApp() {
-        startApp(100, 0, 800, 10);
+        startApp(100, 0, 800, 30);
     }
 
     private static void startApp(int x, int y, int size, int panelSize) {
@@ -37,12 +37,12 @@ public class Practica_2 {
         guiFrame.setController(controller1);
 
         AutomaticController controller2 = new AutomaticController(internalState, internalState.addPlayer());
-        AutomaticController controller3 = new AutomaticController(internalState, internalState.addPlayer());
-
-        controller2.start();
-        controller3.start();
+        //AutomaticController controller3 = new AutomaticController(internalState, internalState.addPlayer());
 
         internalState.initGame();
+        
+        controller2.start();
+        //controller3.start();
 
     }
 

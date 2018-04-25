@@ -69,7 +69,7 @@ public class InternalSnakeState extends Observable {
     public int addPlayer() {
         snakes.add(new ArrayList<>());
         points.add(0);
-        size.add(10);
+        size.add(5);
 
         int randomX = ThreadLocalRandom.current().nextInt(0, this.cols);
         int randomY = ThreadLocalRandom.current().nextInt(0, this.rows);
@@ -114,7 +114,6 @@ public class InternalSnakeState extends Observable {
         moveReward();
 
         snakeMover.resume();
-        System.out.println("Resume");
     }
 
     public Point getCellToDraw() {
@@ -257,5 +256,17 @@ public class InternalSnakeState extends Observable {
 
     public synchronized void setTime(double time) {
         this.time = time;
+    }
+    
+    public List<List<Point>> getSnakes() {
+        return this.snakes;
+    }
+    
+    public Point getReward(){
+        return  this.reward;
+    }
+    
+    public Integer [] getSpeed(int id) {
+        return speed.get(id);
     }
 }
