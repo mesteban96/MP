@@ -107,7 +107,7 @@ public class AutomaticPlayer implements Runnable {
                 collides = false;
             }
             paso++;
-        } while (collides && paso <=4);
+        } while (collides && paso <4);
             
         return speed;
     }
