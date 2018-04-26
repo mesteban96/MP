@@ -12,6 +12,7 @@ import practica_2.Controllers.AutomaticController;
 import practica_2.Controllers.HumanController;
 import practica_2.Model.InternalSnakeState;
 import practica_2.GUI.ApplicationFrame;
+import practica_2.GUI.PuntuationFrame;
 
 /**
  *
@@ -27,11 +28,15 @@ public class Practica_2 {
     }
 
     private static void startApp() {
-        startApp(100, 0, 800, 30, 3);
+        startApp(100, 0, 800, 20, 5);
     }
 
     private static void startApp(int x, int y, int size, int panelSize, int automaticPlayers) {
         InternalSnakeState internalState = new InternalSnakeState(size, panelSize);
+        
+        PuntuationFrame pointsFrame = new PuntuationFrame(x + size + 50, y, automaticPlayers+1, internalState);
+        internalState.addObserver(pointsFrame);
+        pointsFrame.init();
 
         ApplicationFrame guiFrame = new ApplicationFrame(x, y, size, panelSize, internalState);
         guiFrame.init();

@@ -306,4 +306,13 @@ public class InternalSnakeState extends Observable {
         return speed.get(id);
     }
 
+    public synchronized List<Integer> getPoints() {
+        return points;
+    }
+
+    public synchronized List<Color> getSnakeColor() {
+        return snakeColor;
+    }
+
+    
 }

@@ -80,7 +80,6 @@ public class AutomaticPlayer implements Runnable {
         speed = this.pointToReward(reward, snakes.get(id).get(0), speed);
         
         speed = correctMovement(snakes, speed,snakes.get(id).get(0));
-        System.out.println(speed[0] + " " + speed[1] );
         this.automaticContoller.move(speed[0], speed[1]);
         this.pause();
         
