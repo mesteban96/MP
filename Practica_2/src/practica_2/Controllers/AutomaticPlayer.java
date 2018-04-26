@@ -80,6 +80,7 @@ public class AutomaticPlayer implements Runnable {
         speed = this.pointToReward(reward, snakes.get(id).get(0), speed);
         
         speed = correctMovement(snakes, speed,snakes.get(id).get(0));
+        
         this.automaticContoller.move(speed[0], speed[1]);
         this.pause();
         
@@ -101,11 +102,12 @@ public class AutomaticPlayer implements Runnable {
                     speed[0] = 0;
                     speed[1] = paso - 2;
                 }
+                collides = true;
             } else {
                 collides = false;
             }
             paso++;
-        } while (collides || paso >=4);
+        } while (collides && paso <=4);
             
         return speed;
     }
