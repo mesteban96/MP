@@ -5,13 +5,15 @@
  */
 package practica_2.Controllers;
 
+import java.util.Observable;
+import java.util.Observer;
 import practica_2.Model.InternalSnakeState;
 
 /**
  *
  * @author ivan
  */
-public class AutomaticController extends AbstractController {
+public class AutomaticController extends AbstractController implements Observer {
 
     private AutomaticPlayer automaticPlayer;
     Thread t;
@@ -32,6 +34,14 @@ public class AutomaticController extends AbstractController {
             internalSnake.changeDirectionX(dirX, id);
         } else {
             internalSnake.changeDirectionY(dirY, id);
+        }
+    }
+
+    @Override
+    public void update(Observable o, Object o1) {
+        Integer op = (Integer) o1;
+        if (op != null && op == 4) {
+            automaticPlayer.resume();
         }
     }
 }

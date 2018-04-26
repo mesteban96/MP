@@ -7,6 +7,9 @@ package practica_2.Controllers;
 
 import java.awt.Point;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+import practica_2.Model.InternalSnakeState;
 
 /**
  *
@@ -76,17 +79,36 @@ public class AutomaticPlayer implements Runnable {
 
         speed = this.pointToReward(reward, snakes.get(id).get(0), speed);
         
-        correctMovement();
-        
+        speed = correctMovement(snakes, speed,snakes.get(id).get(0));
+        System.out.println(speed[0] + " " + speed[1] );
         this.automaticContoller.move(speed[0], speed[1]);
-        //this.pause();
-        
+        this.pause();
         
     }
     
     
-    private void correctMovement () {
-        
+    private Integer [] correctMovement (List<List<Point>> snakes, Integer[] speed, Point head) {
+        Point newHead = new Point ();
+        boolean collides  = false;
+        int paso = 0;
+        do {   
+            newHead.x = head.x + speed[0];
+            newHead.y = head.y + speed[1];
+            if (InternalSnakeState.checkSnakeCollition(snakes, newHead)){
+                if (paso % 2 == 0){
+                    speed[0] = paso-1;
+                    speed[1] = 0;
+                } else {
+                    speed[0] = 0;
+                    speed[1] = paso - 2;
+                }
+            } else {
+                collides = false;
+            }
+            paso++;
+        } while (collides || paso >=4);
+            
+        return speed;
     }
     
     
@@ -98,7 +120,7 @@ public class AutomaticPlayer implements Runnable {
                 speed[0] = 0;
             }
         } else {
-
+            
             if (reward.x != head.x) {
                 speed[0] = (reward.x < head.x) ? -1 : 1;
                 speed[1] = 0;

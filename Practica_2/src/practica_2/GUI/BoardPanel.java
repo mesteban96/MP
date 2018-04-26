@@ -85,7 +85,9 @@ public class BoardPanel extends JPanel implements Observer {
 
     private void drawCell(Point p, Color color) {
         int position = (int) (p.getY() * cols + p.getX());
-        gameCells.get(position).setBackground(color);
+        if (position > 0){
+            gameCells.get(position).setBackground(color);
+        }
     }
 
     private void restartGame() {

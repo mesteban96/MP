@@ -5,6 +5,8 @@
  */
 package practica_2;
 
+import java.util.ArrayList;
+import java.util.List;
 import practica_2.Controllers.AbstractController;
 import practica_2.Controllers.AutomaticController;
 import practica_2.Controllers.HumanController;
@@ -25,10 +27,10 @@ public class Practica_2 {
     }
 
     private static void startApp() {
-        startApp(100, 0, 800, 30);
+        startApp(100, 0, 800, 30, 3);
     }
 
-    private static void startApp(int x, int y, int size, int panelSize) {
+    private static void startApp(int x, int y, int size, int panelSize, int automaticPlayers) {
         InternalSnakeState internalState = new InternalSnakeState(size, panelSize);
 
         ApplicationFrame guiFrame = new ApplicationFrame(x, y, size, panelSize, internalState);
@@ -36,13 +38,19 @@ public class Practica_2 {
         AbstractController controller1 = new HumanController(internalState, internalState.addPlayer());
         guiFrame.setController(controller1);
 
-        AutomaticController controller2 = new AutomaticController(internalState, internalState.addPlayer());
-        //AutomaticController controller3 = new AutomaticController(internalState, internalState.addPlayer());
-
+        
+        List <AutomaticController> automaticControllers = new ArrayList <> ();
+        for (int i = 0; i < automaticPlayers; i++) {
+            AutomaticController controller = new AutomaticController(internalState, internalState.addPlayer());
+            automaticControllers.add(controller);
+            internalState.addObserver(controller);
+        }
+    
         internalState.initGame();
         
-        controller2.start();
-        //controller3.start();
+        for (AutomaticController controller : automaticControllers){
+            controller.start();
+        }
 
     }
 

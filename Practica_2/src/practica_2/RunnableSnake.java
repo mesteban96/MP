@@ -78,7 +78,7 @@ public class RunnableSnake implements Runnable {
             try {
                 internalSnake.moveSnakes();
                 /* Less number == higherSpeed*/
-                Thread.sleep(300);
+                Thread.sleep(100);
             } catch (InterruptedException ex) {
                 Logger.getLogger(ApplicationFrame.class.getName()).log(Level.SEVERE, null, ex);
             }

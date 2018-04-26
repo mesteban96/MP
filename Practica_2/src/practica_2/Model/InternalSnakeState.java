@@ -33,6 +33,8 @@ public class InternalSnakeState extends Observable {
 
     private List<Integer[]> speed;
 
+    private List<Color> snakeColor;
+
     private Point cellToDraw;
 
     private Color cellColor;
@@ -45,9 +47,13 @@ public class InternalSnakeState extends Observable {
 
     private int numPlayers;
 
+    private List<Boolean> isAlive;
+
+    private int alivePlayers;
+
     /**
      * Operations : * 0 = Do nothing * 1 = Restart Game * 2 = Paint cell * 3 =
-     * Get Time
+     * Get Time * 4 = End turn
      */
     private int operation = 0;
 
@@ -59,10 +65,13 @@ public class InternalSnakeState extends Observable {
 
     private void restartPlayers() {
         this.numPlayers = 0;
+        this.alivePlayers = 0;
         snakes = new ArrayList<>();
         this.size = new ArrayList<>();
         this.points = new ArrayList<>();
         this.speed = new ArrayList<>();
+        this.snakeColor = new ArrayList<>();
+        this.isAlive = new ArrayList<>();
         this.time = 0d;
     }
 
@@ -81,9 +90,26 @@ public class InternalSnakeState extends Observable {
         speed.add(new Integer[2]);
         speed.get(numPlayers)[0] = 1;
         speed.get(numPlayers)[1] = 0;
+        Color c = new Color((float) Math.random() * 0.8f, (float) Math.random() * 0.8f, (float) Math.random() * 0.8f);
+
+        snakeColor.add(c);
+        isAlive.add(true);
 
         numPlayers++;
+        alivePlayers++;
         return numPlayers - 1;
+    }
+
+    private void removePlayer(int id) {
+        for (Point p : snakes.get(id)) {
+            this.drawCell(p, Color.WHITE);
+            p.x = -100;
+            p.y = -100;
+        }
+        speed.get(id)[0] = 0;
+        speed.get(id)[1] = 0;
+        isAlive.set(id, false);
+        alivePlayers--;
     }
 
     public void initGame() {
@@ -109,6 +135,7 @@ public class InternalSnakeState extends Observable {
         restartPlayers();
         restartSnakes(players);
         numPlayers = players;
+        alivePlayers = players;
 
         reward = new Point();
         moveReward();
@@ -127,7 +154,7 @@ public class InternalSnakeState extends Observable {
     /**
      *
      * @return Operations : 0 = Do nothing 1 = Restart Game 2 = Paint cell 3 =
-     * Get Time
+     * Get Time 4 = End turn
      */
     public int getOperation() {
         return operation;
@@ -138,7 +165,7 @@ public class InternalSnakeState extends Observable {
         for (int i = snakes.get(id).size() - 1; i > 0; i--) {
             //set the last element to the value of the 2nd to last element
             snakes.get(id).set(i, snakes.get(id).get(i - 1));
-            drawCell(snakes.get(id).get(i), Color.RED);
+            drawCell(snakes.get(id).get(i), snakeColor.get(id));
         }
     }
 
@@ -171,8 +198,12 @@ public class InternalSnakeState extends Observable {
         }
 
         /* If the snake collides with itself or with others */
-        if (checkSnakeCollition(newHead)) {
-            restartGame();
+        if (checkSnakeCollition(this.snakes, newHead)) {
+            if (alivePlayers <= 2) {
+                restartGame();
+            } else {
+                removePlayer(id);
+            }
         } else {
             if (newHead.equals(reward)) {
                 points.set(id, points.get(id) + 1);
@@ -183,16 +214,22 @@ public class InternalSnakeState extends Observable {
             snakes.get(id).set(0, newHead);
             drawCell(newHead, Color.ORANGE);
         }
+
+        this.operation = 4;
+        setChanged();
+        notifyObservers(4);
     }
 
     public synchronized void moveSnakes() {
         for (int i = 0; i < this.numPlayers; i++) {
-            moveSnake(i);
+            if (isAlive.get(i)) {
+                moveSnake(i);
+            }
         }
     }
 
     /* Return true if the snake collides with a point */
-    private boolean checkSnakeCollition(Point pos) {
+    public static boolean checkSnakeCollition(List<List<Point>> snakes, Point pos) {
         for (List<Point> snake : snakes) {
             if (snake.contains(pos)) {
                 return true;
@@ -202,7 +239,6 @@ public class InternalSnakeState extends Observable {
     }
 
     public void drawCell(Point p, Color c) {
-
         this.cellToDraw = p;
         this.cellColor = c;
         this.operation = 2;
@@ -223,7 +259,7 @@ public class InternalSnakeState extends Observable {
             Random rand = new Random();
             reward.x = rand.nextInt(cols);
             reward.y = rand.nextInt(rows);
-        } while (checkSnakeCollition(reward));
+        } while (checkSnakeCollition(this.snakes, reward));
 
         drawCell(reward, Color.BLUE);
     }
@@ -257,16 +293,17 @@ public class InternalSnakeState extends Observable {
     public synchronized void setTime(double time) {
         this.time = time;
     }
-    
-    public List<List<Point>> getSnakes() {
+
+    public synchronized List<List<Point>> getSnakes() {
         return this.snakes;
     }
-    
-    public Point getReward(){
-        return  this.reward;
+
+    public synchronized Point getReward() {
+        return this.reward;
     }
-    
-    public Integer [] getSpeed(int id) {
+
+    public synchronized Integer[] getSpeed(int id) {
         return speed.get(id);
     }
+
 }
