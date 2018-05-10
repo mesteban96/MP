@@ -9,7 +9,6 @@ import Server.Controller.AbstractController;
 import Server.Controller.HumanController;
 import Server.Model.InternalSnakeState;
 import Server.Model.Player;
-import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -50,23 +49,23 @@ public class ThreadedWebHandler extends Thread implements Observer {
             internalSnakeState = internal;
 
             player = new Player(idclient);
+            internalSnakeState.addPlayer(player);
 
             controller = new HumanController(internalSnakeState, player);
             internalSnakeState.addObserver(this);
 
             in = new BufferedReader(new InputStreamReader(incoming.getInputStream()));
             out = new PrintWriter(incoming.getOutputStream(), true);
+
+            out.println("IDC;" + idclient);
         } catch (IOException ex) {
             Logger.getLogger(ThreadedWebHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public void run() { // Redefinición de run
-        internalSnakeState.addPlayer(player);
-        in = null;
+    @Override
+    public void run() {
         try {
-            System.out.print("Cliente " + idclient + "\n");
-            out.println("IDC;" + idclient);
             String line;
             while (!(line = in.readLine()).equals("") || keepConected) {
                 parseAction(line);
@@ -87,38 +86,45 @@ public class ThreadedWebHandler extends Thread implements Observer {
     }
 
     private void parseAction(String message) {
-        String[] instruction = message.split(";");
+        String s = message;
+        String[] instruction = s.split(";");
+
         switch (instruction[0]) {
             case "DIR": {
                 Integer[] speed = new Integer[2];
-                switch (instruction[1]) {
-                    case "ARRIBA": {
-                        speed[0] = 0;
-                        speed[1] = -1;
-                        break;
+                int id = Integer.parseInt(instruction[1]);
+                System.out.println(s + " " + player.getId() + " " + id);
+                if (player.getId() == id) {
+                    switch (instruction[2]) {
+                        case "ARRIBA": {
+                            speed[0] = 0;
+                            speed[1] = -1;
+                            break;
+                        }
+                        case "ABAJO": {
+                            speed[0] = 0;
+                            speed[1] = 1;
+                            break;
+                        }
+                        case "IZQ": {
+                            speed[0] = -1;
+                            speed[1] = 0;
+                            break;
+                        }
+                        case "DER": {
+                            speed[0] = 1;
+                            speed[1] = 0;
+                            break;
+                        }
+                        default: {
+                            speed[0] = 1;
+                            speed[1] = 0;
+                            break;
+                        }
                     }
-                    case "ABAJO": {
-                        speed[0] = 0;
-                        speed[1] = 1;
-                        break;
-                    }
-                    case "IZQ": {
-                        speed[0] = -1;
-                        speed[1] = 0;
-                        break;
-                    }
-                    case "DER": {
-                        speed[0] = 1;
-                        speed[1] = 0;
-                        break;
-                    }
-                    default: {
-                        speed[0] = 1;
-                        speed[1] = 0;
-                        break;
-                    }
+                    System.err.println(speed[0] + " " + speed[1]);
+                    controller.move(speed[0], speed[1]);
                 }
-                controller.move(speed[0], speed[1]);
                 break;
             }
 

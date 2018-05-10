@@ -17,7 +17,6 @@ import java.util.Observable;
  */
 public class HumanController extends AbstractController {
 
-    
     public HumanController(InternalSnakeState internalSnakeState, Player player) {
         super(internalSnakeState, player);
     }
@@ -25,11 +24,12 @@ public class HumanController extends AbstractController {
     @Override
     public synchronized void move(int dirX, int dirY) {
         if (dirX != 0) {
-           this.changeDirectionX(dirX, player);
+            this.changeDirectionX(dirX, player);
+        } else {
+            if (dirY != 0) {
+                this.changeDirectionY(dirY, player);
+            }
         }
-        if (dirY != 0) {
-            this.changeDirectionY(dirY, player);
-        }
-    }    
-    
+    }
+
 }

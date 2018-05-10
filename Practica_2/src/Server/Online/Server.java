@@ -40,12 +40,11 @@ public class Server {
             for (;;) {
                 Socket incoming = s.accept();
                 
-                System.out.println("Cliente " + i);
                 Thread t = new ThreadedWebHandler(incoming, i, internalSnakeState);
+                t.start();
                 if (i == 0) {
                     internalSnakeState.initGame();
                 }
-                t.start();
                 i++;
             }
 

@@ -30,6 +30,7 @@ public class OnlineController extends AbstractController {
     int posX, posY;
     Color colorToDraw;
 
+    int idClient;
     int operation;
 
     public OnlineController(Socket s) {
@@ -46,10 +47,7 @@ public class OnlineController extends AbstractController {
 
     public void start() {
         try {
-            String s = in.readLine();
-            System.out.println(s);
-            String startMsg [] = s.split(";");
-            this.id = Integer.parseInt(startMsg[1]);
+      
             System.out.print("Cliente ee " + id + "\n");
             String line;
             while (!(line = in.readLine()).equals("")) {
@@ -84,6 +82,11 @@ public class OnlineController extends AbstractController {
                 this.notifyObservers();
                 break;
             }
+            
+            case "IDC" : {
+                this.idClient = Integer.parseInt(instruction[1]);
+                break;
+            }
 
             case "FIN": {
 
@@ -94,13 +97,12 @@ public class OnlineController extends AbstractController {
 
     @Override
     public void move(int dirX, int dirY) {
-        String msg = "MOV;" + id + ";";
+        String msg = "DIR;" + this.idClient + ";";
         if (dirX != 0) {
-            msg += (dirX == 1) ? "IZQ" : "DER";
-        } else if (dirX != 0) {
+            msg += (dirX == 1) ? "DER" : "IZQ";
+        } else if (dirY != 0) {
             msg += (dirY == 1) ? "ABAJO" : "ARRIBA";
         }
-
         out.println(msg);
     }
 

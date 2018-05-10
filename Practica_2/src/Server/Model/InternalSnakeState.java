@@ -112,9 +112,9 @@ public class InternalSnakeState extends Observable {
 
     public void initGame() {
         snakeMover = new RunnableSnake(this);
+        (new Thread(snakeMover)).start();
         reward = new Point();
         moveReward();
-        (new Thread(snakeMover)).start();
     }
 
     private void restartSnakes() {
@@ -178,6 +178,8 @@ public class InternalSnakeState extends Observable {
 
         /* Paint the last cell in color */
         drawCell(player.getSnake().get(0), player.getColor(), player.getId());
+
+        
 
         newHead.x = player.getSnake().get(0).x + player.getSpeedX();
         newHead.y = player.getSnake().get(0).y + player.getSpeedY();

@@ -35,6 +35,8 @@ public class Player {
 
         this.snake = new ArrayList<>();
         speed = new Integer[2];
+        speed[0] = 1;
+        speed[1] = 0;
         color = new Color((float) Math.random() * 0.8f, (float) Math.random() * 0.8f, (float) Math.random() * 0.8f);
     }
     
@@ -44,17 +46,15 @@ public class Player {
         speed[1] = 0;
         points = 0;
         size = 5;
+        this.snake = new ArrayList<>();
     }
 
     public void startSnake(int x, int y) {
-        restart ();
+        restart();
         for (int i = 0; i < size; i++) {
             snake.add(new Point(x, y));
         }
     }
-    
-    
-    
 
     public Integer getId() {
         return this.id;
@@ -69,7 +69,7 @@ public class Player {
     }
 
     public Integer getSpeedY() {
-        return speed[0];
+        return speed[1];
     }
     
     public Integer [] getSpeed() {
@@ -77,6 +77,7 @@ public class Player {
     }
 
     public void setSpeedX(int s) {
+        System.err.print("Cambio");
         speed[0] = s;
     }
 
