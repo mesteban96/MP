@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import Server.Model.InternalSnakeState;
+import Server.Model.Player;
+import java.util.Collection;
 
 /**
  *
@@ -22,7 +24,7 @@ public class AutomaticPlayer implements Runnable {
     private boolean paused = false;
     private volatile Object pauseLock = new Object();
 
-    private AutomaticController automaticContoller;
+    private AbstractController automaticContoller;
 
     public AutomaticPlayer(AutomaticController automatic) {
         this.automaticContoller = automatic;
@@ -73,14 +75,14 @@ public class AutomaticPlayer implements Runnable {
 
     private synchronized void movementAlgorithm() {
 
-        List<List<Point>> snakes = automaticContoller.internalSnake.getSnakes();
+        Collection<Player> players = automaticContoller.internalSnake.getPlayers();
         Point reward = automaticContoller.internalSnake.getReward();
-        int id = automaticContoller.id;
-        Integer[] speed = automaticContoller.internalSnake.getSpeed(id);
+        Player player = automaticContoller.player;
+        Integer[] speed = player.getSpeed();
 
-        speed = this.pointToReward(reward, snakes.get(id).get(0), speed);
+        speed = this.pointToReward(reward, player.getSnake().get(0), speed);
         
-        speed = correctMovement(snakes, speed,snakes.get(id).get(0));
+        speed = correctMovement(players, speed, player.getSnake().get(0));
         
         this.automaticContoller.move(speed[0], speed[1]);
         this.pause();
@@ -88,14 +90,14 @@ public class AutomaticPlayer implements Runnable {
     }
     
     
-    private Integer [] correctMovement (List<List<Point>> snakes, Integer[] speed, Point head) {
+    private Integer [] correctMovement (Collection <Player> players, Integer[] speed, Point head) {
         Point newHead = new Point ();
         boolean collides;
         int paso = 0;
         do {   
             newHead.x = head.x + speed[0];
             newHead.y = head.y + speed[1];
-            if (InternalSnakeState.checkSnakeCollition(snakes, newHead)){
+            if (InternalSnakeState.checkSnakeCollition(players, newHead)){
                 if (paso % 2 == 0){
                     speed[0] = paso-1;
                     speed[1] = 0;

@@ -34,13 +34,17 @@ public class Server {
         try {
             s = new ServerSocket(puerto);
 
-            System.out.println("Esperando conexiones ...\n");
+            System.out.println("Esperando conexiones en " + s.toString() + "  ...\n");
             int i = 0;
 
             for (;;) {
                 Socket incoming = s.accept();
+                
                 System.out.println("Cliente " + i);
                 Thread t = new ThreadedWebHandler(incoming, i, internalSnakeState);
+                if (i == 0) {
+                    internalSnakeState.initGame();
+                }
                 t.start();
                 i++;
             }

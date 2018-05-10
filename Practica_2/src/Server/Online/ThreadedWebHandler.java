@@ -9,6 +9,7 @@ import Server.Controller.AbstractController;
 import Server.Controller.HumanController;
 import Server.Model.InternalSnakeState;
 import Server.Model.Player;
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -50,6 +51,7 @@ public class ThreadedWebHandler extends Thread implements Observer{
         player = new Player(idclient);
         
         controller = new HumanController(internalSnakeState, player);
+        internalSnakeState.addObserver(this);
     }
 
     public void run() { // Redefinición de run
@@ -123,7 +125,27 @@ public class ThreadedWebHandler extends Thread implements Observer{
 
     @Override
     public void update(Observable o, Object o1) {
+        InternalSnakeState internalSnake = (InternalSnakeState) o;
+        int op = internalSnake.getOperation();
         
-        //send draw
+        String msg; 
+        
+        if (op == 2) { /* Send paint a cell */
+            int id = (int) o1;
+            
+            msg = "DRAW;" + id + ";" + internalSnake.getCellToDraw().getX() + ";" + internalSnake.getCellToDraw().getY() + ";" + internalSnake.getCellColor().getRGB();
+            this.sendMessage(msg);
+        }
+        
+        if (op == 5) { /* Update punctuation */
+            Player p = (Player) o1;
+            msg = "PTS;" + player.getId() + ";" + player.getPoints();
+            this.sendMessage(msg);
+        }
+        
+    }
+
+    private void sendMessage(String msg) {
+        this.out.println(msg);
     }
 }

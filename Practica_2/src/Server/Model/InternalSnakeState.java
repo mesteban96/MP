@@ -9,6 +9,7 @@ import com.sun.webkit.Timer;
 import java.awt.Color;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
@@ -42,12 +43,12 @@ public class InternalSnakeState extends Observable {
     private List<Boolean> isAlive;
 
     private int alivePlayers;
-    
-    private Map <Integer, Player> players;
+
+    private Map<Integer, Player> players;
 
     /**
      * Operations : * 0 = Do nothing * 1 = Restart Game * 2 = Paint cell * 3 =
-     * Get Time * 4 = End turn
+     * Get Time * 4 = End turn * 5 = Change Points
      */
     private int operation = 0;
 
@@ -61,8 +62,8 @@ public class InternalSnakeState extends Observable {
     private void restartPlayers() {
         this.numPlayers = 0;
         this.alivePlayers = 0;
-        List <Player> toRemove = new ArrayList<>();
-        
+        List<Player> toRemove = new ArrayList<>();
+
         for (Player player : players.values()) {
             if (player.isConnected) {
                 player.restart();
@@ -70,21 +71,19 @@ public class InternalSnakeState extends Observable {
                 players.remove(player.getId());
             }
         }
-        
+
         /*
         if (!toRemove.isEmpty()) {
             for (Player p: toRemove) {
                 players.remove(p.getId());
             }
         }
-        */
-
-        
+         */
         this.time = 0d;
     }
 
     public void addPlayer(Player player) {
-        
+
         players.put(player.getId(), player);
 
         int randomX = ThreadLocalRandom.current().nextInt(0, this.cols);
@@ -94,13 +93,13 @@ public class InternalSnakeState extends Observable {
 
         numPlayers++;
         alivePlayers++;
-        
+
     }
 
     private void removePlayer(Player player) {
-        
+
         for (Point p : player.getSnake()) {
-            this.drawCell(p, Color.WHITE);
+            this.drawCell(p, Color.WHITE, player.id);
             p.x = -100;
             p.y = -100;
         }
@@ -118,9 +117,12 @@ public class InternalSnakeState extends Observable {
         (new Thread(snakeMover)).start();
     }
 
-    private void restartSnakes(int players) {
-        for (int i = 0; i < players; i++) {
-            this.addPlayer();
+    private void restartSnakes() {
+        for (Player player : this.players.values()) {
+            if (player.isConnected) {
+                player.setAlive(true);
+                this.addPlayer(player);
+            }
         }
     }
 
@@ -130,11 +132,11 @@ public class InternalSnakeState extends Observable {
         this.operation = 1;
         setChanged();
         notifyObservers();
-        int players = numPlayers;
+        int nplayers = numPlayers;
         restartPlayers();
-        restartSnakes(players);
-        numPlayers = players;
-        alivePlayers = players;
+        restartSnakes();
+        numPlayers = nplayers;
+        alivePlayers = nplayers;
 
         reward = new Point();
         moveReward();
@@ -161,25 +163,26 @@ public class InternalSnakeState extends Observable {
 
     private void shiftRight(Player player) {
         //make a loop to run through the array list
-        for (int i = player.getSnake().size() - 1; i > 0; i--) {
+        for (int i = player.size() - 1; i > 0; i--) {
             //set the last element to the value of the 2nd to last element
             player.getSnake().set(i, player.getSnake().get(i - 1));
         }
     }
 
     public synchronized void moveSnake(Player player) {
-        Point last = snakes.get(id).get(snakes.get(id).size() - 1);
-        drawCell(last, Color.WHITE);
+        Point last = player.getSnake().get(player.size() - 1);
+
+        drawCell(last, Color.WHITE, player.getId());
 
         Point newHead = new Point();
 
         /* Paint the last cell in color */
-        drawCell(snakes.get(id).get(0), snakeColor.get(id));
-        
-        newHead.x = snakes.get(id).get(0).x + speed.get(id)[0];
-        newHead.y = snakes.get(id).get(0).y + speed.get(id)[1];
+        drawCell(player.getSnake().get(0), player.getColor(), player.getId());
 
-        shiftRight(id);
+        newHead.x = player.getSnake().get(0).x + player.getSpeedX();
+        newHead.y = player.getSnake().get(0).y + player.getSpeedY();
+
+        shiftRight(player);
 
         /* If out of bounds it reapears in the other side*/
         if (newHead.x >= rows) {
@@ -199,21 +202,24 @@ public class InternalSnakeState extends Observable {
         }
 
         /* If the snake collides with itself or with others */
-        if (checkSnakeCollition(this.snakes, newHead)) {
+        if (checkSnakeCollition(players.values(), newHead)) {
             if (alivePlayers <= 2) {
                 restartGame();
             } else {
-                removePlayer(id);
+                removePlayer(player);
             }
         } else {
             if (newHead.equals(reward)) {
-                points.set(id, points.get(id) + 1);
-                increaseSnake(id);
+                player.increasePoints(5);
+                this.operation = 5;
+                setChanged();
+                notifyObservers(player);
+                increaseSnake(player);
                 moveReward();
             }
 
-            snakes.get(id).set(0, newHead);
-            drawCell(newHead, Color.ORANGE);
+            player.getSnake().set(0, newHead);
+            drawCell(newHead, Color.ORANGE, player.id);
         }
 
         this.operation = 4;
@@ -222,36 +228,35 @@ public class InternalSnakeState extends Observable {
     }
 
     public synchronized void moveSnakes() {
-        for (int i = 0; i < this.numPlayers; i++) {
-            if (isAlive.get(i)) {
-                moveSnake(i);
+        for (Player player : players.values()) {
+            if (player.isAlive() && player.isConnected()) {
+                moveSnake(player);
             }
         }
     }
 
     /* Return true if the snake collides with a point */
-    public static boolean checkSnakeCollition(List<List<Point>> snakes, Point pos) {
-        for (List<Point> snake : snakes) {
-            if (snake.contains(pos)) {
+    public static boolean checkSnakeCollition(Collection<Player> players, Point pos) {
+        for (Player player : players) {
+            if (player.getSnake().contains(pos)) {
                 return true;
             }
         }
         return false;
     }
 
-    public void drawCell(Point p, Color c) {
+    public void drawCell(Point p, Color c, int id) {
         this.cellToDraw = p;
         this.cellColor = c;
         this.operation = 2;
         setChanged();
-        notifyObservers();
+        notifyObservers(id);
     }
 
-    private void increaseSnake(int id) {
+    private void increaseSnake(Player player) {
         /* Increases the snake lenght by 3*/
         for (int i = 0; i < 3; i++) {
-            snakes.get(id).add(new Point(snakes.get(id).get(size.get(id) - 1)));
-            size.set(id, size.get(id) + 1);
+            player.getSnake().add(new Point(player.getSnake().get(player.size() - 1)));
         }
     }
 
@@ -260,9 +265,9 @@ public class InternalSnakeState extends Observable {
             Random rand = new Random();
             reward.x = rand.nextInt(cols);
             reward.y = rand.nextInt(rows);
-        } while (checkSnakeCollition(this.snakes, reward));
+        } while (checkSnakeCollition(players.values(), reward));
 
-        drawCell(reward, Color.BLUE);
+        drawCell(reward, Color.BLUE, -1);
     }
 
     public synchronized void increaseTime(double time) {
@@ -273,7 +278,6 @@ public class InternalSnakeState extends Observable {
     }
 
     public synchronized double getTime() {
-
         return (double) Math.round(this.time * 1000d) / 1000d;
     }
 
@@ -281,25 +285,12 @@ public class InternalSnakeState extends Observable {
         this.time = time;
     }
 
-    public synchronized List<List<Point>> getSnakes() {
-        return this.snakes;
-    }
-
     public synchronized Point getReward() {
         return this.reward;
     }
-
-    public synchronized Integer[] getSpeed(int id) {
-        return speed.get(id);
-    }
-
-    public synchronized List<Integer> getPoints() {
-        return points;
-    }
-
-    public synchronized List<Color> getSnakeColor() {
-        return snakeColor;
-    }
-
     
+    public Collection<Player> getPlayers () {
+        return this.players.values();
+    }
+
 }

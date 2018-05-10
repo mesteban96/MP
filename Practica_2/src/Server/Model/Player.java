@@ -71,6 +71,10 @@ public class Player {
     public Integer getSpeedY() {
         return speed[0];
     }
+    
+    public Integer [] getSpeed() {
+        return this.speed;
+    }
 
     public void setSpeedX(int s) {
         speed[0] = s;
@@ -88,5 +92,29 @@ public class Player {
         this.isConnected = false;
     }
 
+    public Color getColor() {
+        return this.color;
+    }
+    
+    public int increasePoints(int points) {
+        this.points += points;
+        return this.points;
+    }
+    
+    public boolean isAlive () {
+        return isAlive;
+    }
+    
+    public boolean isConnected () {
+        return this.isConnected;
+    }
+    
+    public int size () {
+        return this.snake.size();
+    }
+    
+    public int getPoints () {
+        return this.points;
+    }
 
 }
