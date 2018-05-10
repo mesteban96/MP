@@ -5,8 +5,8 @@
  */
 package practica_2;
 
-import practica_2.Model.InternalSnakeState;
-import practica_2.GUI.ApplicationFrame;
+import Server.Model.InternalSnakeState;
+import Client.GUI.ApplicationFrame;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

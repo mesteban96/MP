@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package practica_2.GUI;
+package Client.GUI;
 
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -16,8 +16,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import practica_2.Controllers.AbstractController;
-import practica_2.Model.InternalSnakeState;
+import Client.Controllers.AbstractController;
+import Server.Model.InternalSnakeState;
 
 /**
  *

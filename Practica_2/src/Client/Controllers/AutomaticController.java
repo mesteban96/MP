@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package practica_2.Controllers;
+package Client.Controllers;
 
 import java.util.Observable;
 import java.util.Observer;
-import practica_2.Model.InternalSnakeState;
+import Server.Model.InternalSnakeState;
 
 /**
  *

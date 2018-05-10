@@ -1,0 +1,92 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Server.Model;
+
+import java.awt.Color;
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ *
+ * @author ivan
+ */
+public class Player {
+
+    int id;
+
+    List<Point> snake;
+    int points;
+    int size;
+    boolean isAlive;
+    boolean isConnected;
+
+    private Integer[] speed;
+
+    private Color color;
+
+    public Player(int idclient) {
+        this.id = idclient;
+        isAlive = false;
+        isConnected = true;
+
+        this.snake = new ArrayList<>();
+        speed = new Integer[2];
+        color = new Color((float) Math.random() * 0.8f, (float) Math.random() * 0.8f, (float) Math.random() * 0.8f);
+    }
+    
+    public void restart() {
+        isAlive = true;
+        speed[0] = 1;
+        speed[1] = 0;
+        points = 0;
+        size = 5;
+    }
+
+    public void startSnake(int x, int y) {
+        restart ();
+        for (int i = 0; i < size; i++) {
+            snake.add(new Point(x, y));
+        }
+    }
+    
+    
+    
+
+    public Integer getId() {
+        return this.id;
+    }
+
+    public List <Point> getSnake() {
+        return this.snake;
+    }
+
+    public Integer getSpeedX() {
+        return speed[0];
+    }
+
+    public Integer getSpeedY() {
+        return speed[0];
+    }
+
+    public void setSpeedX(int s) {
+        speed[0] = s;
+    }
+
+    public void setSpeedY(int s) {
+        speed[1] = s;
+    }
+
+    void setAlive(boolean b) {
+        this.isAlive = true;
+    }
+
+    void disconnect() {
+        this.isConnected = false;
+    }
+
+
+}

@@ -3,13 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package practica_2.Controllers;
+package Server.Controller;
 
+import Client.Controllers.*;
 import java.awt.Point;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import practica_2.Model.InternalSnakeState;
+import Server.Model.InternalSnakeState;
 
 /**
  *
@@ -89,7 +90,7 @@ public class AutomaticPlayer implements Runnable {
     
     private Integer [] correctMovement (List<List<Point>> snakes, Integer[] speed, Point head) {
         Point newHead = new Point ();
-        boolean collides  = false;
+        boolean collides;
         int paso = 0;
         do {   
             newHead.x = head.x + speed[0];

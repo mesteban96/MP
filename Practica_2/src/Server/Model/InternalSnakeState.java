@@ -3,15 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package practica_2.Model;
+package Server.Model;
 
 import com.sun.webkit.Timer;
 import java.awt.Color;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,16 +26,6 @@ import practica_2.RunnableSnake;
 public class InternalSnakeState extends Observable {
 
     private final int rows, cols;
-
-    private List<List<Point>> snakes;
-
-    private List<Integer> size;
-
-    private List<Integer> points;
-
-    private List<Integer[]> speed;
-
-    private List<Color> snakeColor;
 
     private Point cellToDraw;
 
@@ -50,6 +42,8 @@ public class InternalSnakeState extends Observable {
     private List<Boolean> isAlive;
 
     private int alivePlayers;
+    
+    private Map <Integer, Player> players;
 
     /**
      * Operations : * 0 = Do nothing * 1 = Restart Game * 2 = Paint cell * 3 =
@@ -60,55 +54,60 @@ public class InternalSnakeState extends Observable {
     public InternalSnakeState(int size, int panelSize) {
         this.rows = size / panelSize;
         this.cols = rows;
+        players = new ConcurrentHashMap<>();
         this.restartPlayers();
     }
 
     private void restartPlayers() {
         this.numPlayers = 0;
         this.alivePlayers = 0;
-        snakes = new ArrayList<>();
-        this.size = new ArrayList<>();
-        this.points = new ArrayList<>();
-        this.speed = new ArrayList<>();
-        this.snakeColor = new ArrayList<>();
-        this.isAlive = new ArrayList<>();
+        List <Player> toRemove = new ArrayList<>();
+        
+        for (Player player : players.values()) {
+            if (player.isConnected) {
+                player.restart();
+            } else {
+                players.remove(player.getId());
+            }
+        }
+        
+        /*
+        if (!toRemove.isEmpty()) {
+            for (Player p: toRemove) {
+                players.remove(p.getId());
+            }
+        }
+        */
+
+        
         this.time = 0d;
     }
 
-    public int addPlayer() {
-        snakes.add(new ArrayList<>());
-        points.add(0);
-        size.add(5);
+    public void addPlayer(Player player) {
+        
+        players.put(player.getId(), player);
 
         int randomX = ThreadLocalRandom.current().nextInt(0, this.cols);
         int randomY = ThreadLocalRandom.current().nextInt(0, this.rows);
 
-        for (int i = 0; i < size.get(numPlayers); i++) {
-            snakes.get(numPlayers).add(new Point(randomX, randomY));
-        }
-
-        speed.add(new Integer[2]);
-        speed.get(numPlayers)[0] = 1;
-        speed.get(numPlayers)[1] = 0;
-        Color c = new Color((float) Math.random() * 0.8f, (float) Math.random() * 0.8f, (float) Math.random() * 0.8f);
-
-        snakeColor.add(c);
-        isAlive.add(true);
+        player.startSnake(randomX, randomY);
 
         numPlayers++;
         alivePlayers++;
-        return numPlayers - 1;
+        
     }
 
-    private void removePlayer(int id) {
-        for (Point p : snakes.get(id)) {
+    private void removePlayer(Player player) {
+        
+        for (Point p : player.getSnake()) {
             this.drawCell(p, Color.WHITE);
             p.x = -100;
             p.y = -100;
         }
-        speed.get(id)[0] = 0;
-        speed.get(id)[1] = 0;
-        isAlive.set(id, false);
+        player.setSpeedX(0);
+        player.setSpeedY(0);
+        player.setAlive(false);
+        player.disconnect();
         alivePlayers--;
     }
 
@@ -160,21 +159,23 @@ public class InternalSnakeState extends Observable {
         return operation;
     }
 
-    private void shiftRight(int id) {
+    private void shiftRight(Player player) {
         //make a loop to run through the array list
-        for (int i = snakes.get(id).size() - 1; i > 0; i--) {
+        for (int i = player.getSnake().size() - 1; i > 0; i--) {
             //set the last element to the value of the 2nd to last element
-            snakes.get(id).set(i, snakes.get(id).get(i - 1));
-            drawCell(snakes.get(id).get(i), snakeColor.get(id));
+            player.getSnake().set(i, player.getSnake().get(i - 1));
         }
     }
 
-    public synchronized void moveSnake(int id) {
+    public synchronized void moveSnake(Player player) {
         Point last = snakes.get(id).get(snakes.get(id).size() - 1);
         drawCell(last, Color.WHITE);
 
         Point newHead = new Point();
 
+        /* Paint the last cell in color */
+        drawCell(snakes.get(id).get(0), snakeColor.get(id));
+        
         newHead.x = snakes.get(id).get(0).x + speed.get(id)[0];
         newHead.y = snakes.get(id).get(0).y + speed.get(id)[1];
 
@@ -262,20 +263,6 @@ public class InternalSnakeState extends Observable {
         } while (checkSnakeCollition(this.snakes, reward));
 
         drawCell(reward, Color.BLUE);
-    }
-
-    public synchronized void changeDirectionX(int x, int id) {
-        if (snakes.get(id).get(0).y != snakes.get(id).get(1).y) {
-            speed.get(id)[0] = x;
-            speed.get(id)[1] = 0;
-        }
-    }
-
-    public synchronized void changeDirectionY(int y, int id) {
-        if (snakes.get(id).get(0).x != snakes.get(id).get(1).x) {
-            speed.get(id)[0] = 0;
-            speed.get(id)[1] = y;
-        }
     }
 
     public synchronized void increaseTime(double time) {
