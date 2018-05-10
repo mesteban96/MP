@@ -66,6 +66,9 @@ public class InternalSnakeState extends Observable {
 
         for (Player player : players.values()) {
             if (player.isConnected) {
+                if (player.isAlive) {
+                    removePlayer(player);
+                }
                 player.restart();
             } else {
                 players.remove(player.getId());
@@ -99,15 +102,12 @@ public class InternalSnakeState extends Observable {
     private void removePlayer(Player player) {
 
         for (Point p : player.getSnake()) {
-            this.drawCell(p, Color.WHITE, player.id);
-            p.x = -100;
-            p.y = -100;
+            this.drawCell(new Point(p.x, p.y), Color.WHITE, player.id);
         }
         player.setSpeedX(0);
         player.setSpeedY(0);
         player.setAlive(false);
-        player.disconnect();
-        alivePlayers--;
+        
     }
 
     public void initGame() {
@@ -127,7 +127,7 @@ public class InternalSnakeState extends Observable {
     }
 
     private void restartGame() {
-
+       System.err.println("RESTARTED!!");
         snakeMover.pause();
         this.operation = 1;
         setChanged();
@@ -138,6 +138,7 @@ public class InternalSnakeState extends Observable {
         numPlayers = nplayers;
         alivePlayers = nplayers;
 
+        drawCell(new Point(reward.x, reward.y), Color.white , -1);
         reward = new Point();
         moveReward();
 
@@ -205,10 +206,11 @@ public class InternalSnakeState extends Observable {
 
         /* If the snake collides with itself or with others */
         if (checkSnakeCollition(players.values(), newHead)) {
-            if (alivePlayers <= 2) {
+            if (alivePlayers < 2) {
                 restartGame();
             } else {
                 removePlayer(player);
+                alivePlayers--;
             }
         } else {
             if (newHead.equals(reward)) {
@@ -240,7 +242,7 @@ public class InternalSnakeState extends Observable {
     /* Return true if the snake collides with a point */
     public static boolean checkSnakeCollition(Collection<Player> players, Point pos) {
         for (Player player : players) {
-            if (player.getSnake().contains(pos)) {
+            if (player.getSnake().contains(pos) && player.isAlive && player.isConnected) {
                 return true;
             }
         }

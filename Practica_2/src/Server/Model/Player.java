@@ -77,7 +77,6 @@ public class Player {
     }
 
     public void setSpeedX(int s) {
-        System.err.print("Cambio");
         speed[0] = s;
     }
 

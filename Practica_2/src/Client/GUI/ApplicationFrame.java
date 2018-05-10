@@ -5,20 +5,12 @@
  */
 package Client.GUI;
 
-import java.awt.Color;
-import java.awt.GridLayout;
-import java.awt.Point;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import Client.Controllers.AbstractController;
 import Client.Controllers.OnlineController;
-import Server.Model.InternalSnakeState;
 
 /**
  *

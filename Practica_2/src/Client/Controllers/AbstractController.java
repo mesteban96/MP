@@ -5,7 +5,7 @@
  */
 package Client.Controllers;
 
-import Server.Model.InternalSnakeState;
+
 import java.util.Observable;
 
 /**
@@ -14,13 +14,8 @@ import java.util.Observable;
  */
 public abstract class AbstractController extends Observable {
 
-    InternalSnakeState internalSnake;
-    protected int id;
 
-    public AbstractController(InternalSnakeState internalSnakeState, int id) {
-        this.internalSnake = internalSnakeState;
-        this.id = id;
-    }
+    protected int id;
     
     public AbstractController () {
         
