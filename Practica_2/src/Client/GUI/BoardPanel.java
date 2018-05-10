@@ -36,8 +36,6 @@ public class BoardPanel extends JPanel implements Observer {
     private ArrayList<JPanel> gameCells;
 
     ApplicationFrame parentFrame;
-    
-    
 
     BoardPanel(ApplicationFrame parent, int size, int panelSize, Observable observated) {
         this.parentFrame = parent;
@@ -50,8 +48,6 @@ public class BoardPanel extends JPanel implements Observer {
     public void initGame() {
         initComponents();
         configureComponents();
-
-        restartSnake();
 
     }
 
@@ -95,12 +91,7 @@ public class BoardPanel extends JPanel implements Observer {
 
     private void restartGame() {
         repaintBoard();
-        restartSnake();
 
-    }
-
-    private void restartSnake() {
-        gameCells.get(0).setBackground(Color.white);
     }
 
     private void repaintBoard() {
@@ -112,27 +103,9 @@ public class BoardPanel extends JPanel implements Observer {
     @Override
     public void update(Observable arg0, Object arg1) {
 
-        if (arg0 instanceof InternalSnakeState) {
-            InternalSnakeState internalSnakeState = (InternalSnakeState) arg0;
-            if (internalSnakeState.getOperation() == 1) {
-                this.restartGame();
-                System.out.println(internalSnakeState.getOperation());
-            }
-
-            if (internalSnakeState.getOperation() == 2) {
-                this.drawCell(internalSnakeState.getCellToDraw(), internalSnakeState.getCellColor());
-            }
-
-            if (internalSnakeState.getOperation() == 3) {
-                parentFrame.setTitle("Time: " + internalSnakeState.getTime());
-            }
-        } else {
-            if (arg0 instanceof OnlineController) {
-                OnlineController onlineController = (OnlineController) arg0;
-                if (onlineController.getOperation() == 1) {
-                    this.drawCell(new Point(onlineController.getPosX(), onlineController.getPosY()), onlineController.getColorToDraw());
-                }
-            }
+        OnlineController onlineController = (OnlineController) arg0;
+        if (onlineController.getOperation() == 1) {
+            this.drawCell(new Point(onlineController.getPosX(), onlineController.getPosY()), onlineController.getColorToDraw());
         }
 
     }
