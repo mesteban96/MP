@@ -5,6 +5,7 @@
  */
 package Client.GUI;
 
+import Client.Controllers.OnlineController;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.Point;
@@ -30,18 +31,20 @@ public class BoardPanel extends JPanel implements Observer {
     private int panelSize;
     private final int gap = 1;
 
-    private InternalSnakeState internalSnakeState;
+    private Observable observated;
 
     private ArrayList<JPanel> gameCells;
 
     ApplicationFrame parentFrame;
+    
+    
 
-    BoardPanel(ApplicationFrame parent, int size, int panelSize, InternalSnakeState snakeState) {
+    BoardPanel(ApplicationFrame parent, int size, int panelSize, Observable observated) {
         this.parentFrame = parent;
         this.panelSize = panelSize;
         this.rows = size / panelSize;
         this.cols = rows;
-        this.internalSnakeState = snakeState;
+        this.observated = observated;
     }
 
     public void initGame() {
@@ -85,7 +88,7 @@ public class BoardPanel extends JPanel implements Observer {
 
     private void drawCell(Point p, Color color) {
         int position = (int) (p.getY() * cols + p.getX());
-        if (position > 0){
+        if (position > 0) {
             gameCells.get(position).setBackground(color);
         }
     }
@@ -109,17 +112,27 @@ public class BoardPanel extends JPanel implements Observer {
     @Override
     public void update(Observable arg0, Object arg1) {
 
-        if (internalSnakeState.getOperation() == 1) {
-            this.restartGame();
-            System.out.println(internalSnakeState.getOperation());
-        }
+        if (arg0 instanceof InternalSnakeState) {
+            InternalSnakeState internalSnakeState = (InternalSnakeState) arg0;
+            if (internalSnakeState.getOperation() == 1) {
+                this.restartGame();
+                System.out.println(internalSnakeState.getOperation());
+            }
 
-        if (internalSnakeState.getOperation() == 2) {
-            this.drawCell(internalSnakeState.getCellToDraw(), internalSnakeState.getCellColor());
-        }
+            if (internalSnakeState.getOperation() == 2) {
+                this.drawCell(internalSnakeState.getCellToDraw(), internalSnakeState.getCellColor());
+            }
 
-        if (internalSnakeState.getOperation() == 3) {
-            parentFrame.setTitle("Time: " + internalSnakeState.getTime());
+            if (internalSnakeState.getOperation() == 3) {
+                parentFrame.setTitle("Time: " + internalSnakeState.getTime());
+            }
+        } else {
+            if (arg0 instanceof OnlineController) {
+                OnlineController onlineController = (OnlineController) arg0;
+                if (onlineController.getOperation() == 1) {
+                    this.drawCell(new Point(onlineController.getPosX(), onlineController.getPosY()), onlineController.getColorToDraw());
+                }
+            }
         }
 
     }

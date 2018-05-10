@@ -6,12 +6,13 @@
 package Client.Controllers;
 
 import Server.Model.InternalSnakeState;
+import java.util.Observable;
 
 /**
  *
  * @author ivan
  */
-public abstract class AbstractController {
+public abstract class AbstractController extends Observable {
 
     InternalSnakeState internalSnake;
     protected int id;
@@ -19,6 +20,10 @@ public abstract class AbstractController {
     public AbstractController(InternalSnakeState internalSnakeState, int id) {
         this.internalSnake = internalSnakeState;
         this.id = id;
+    }
+    
+    public AbstractController () {
+        
     }
 
     public abstract void move(int dirX, int dirY);

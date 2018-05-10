@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import Client.Controllers.AbstractController;
+import Client.Controllers.OnlineController;
 import Server.Model.InternalSnakeState;
 
 /**
@@ -44,6 +45,15 @@ public class ApplicationFrame extends JFrame {
     /* Sets the position of the window (x, y), the size of the window and the size of an individual cell of the game. (Higher size, less cells) **/
     public ApplicationFrame(InternalSnakeState snakeState) {
         this(100, 100, 800, 30, snakeState);
+    }
+
+    public ApplicationFrame(int x, int y, int size, int panelSize, OnlineController controller) {
+        this.setLocation(x, y);
+        this.setSize(size, size);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.gamePanel = new BoardPanel(this, size, panelSize, controller);
+        this.controller = controller;
+        controller.addObserver(gamePanel);
     }
 
     public void setController(AbstractController controller) {

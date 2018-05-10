@@ -25,8 +25,8 @@ public abstract class AbstractController {
     }
 
     public abstract void move(int dirX, int dirY);
-    
-        public synchronized void changeDirectionX(int x, Player player) {
+
+    public synchronized void changeDirectionX(int x, Player player) {
         if (player.getSnake().get(0).y != player.getSnake().get(1).y) {
             player.setSpeedX(x);
             player.setSpeedY(0);
@@ -39,6 +39,5 @@ public abstract class AbstractController {
             player.setSpeedY(y);
         }
     }
-    
-    
+
 }

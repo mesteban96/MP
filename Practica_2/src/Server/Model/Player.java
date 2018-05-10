@@ -88,7 +88,7 @@ public class Player {
         this.isAlive = true;
     }
 
-    void disconnect() {
+    public void disconnect() {
         this.isConnected = false;
     }
 
