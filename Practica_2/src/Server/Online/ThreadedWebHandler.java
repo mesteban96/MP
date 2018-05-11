@@ -57,6 +57,7 @@ public class ThreadedWebHandler extends Thread implements Observer {
             in = new BufferedReader(new InputStreamReader(incoming.getInputStream()));
             out = new PrintWriter(incoming.getOutputStream(), true);
 
+            System.out.println("Cliente " + idclient);
             out.println("IDC;" + idclient);
         } catch (IOException ex) {
             Logger.getLogger(ThreadedWebHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -65,6 +66,9 @@ public class ThreadedWebHandler extends Thread implements Observer {
 
     @Override
     public void run() {
+        
+        internalSnakeState.sendActualState();
+        
         try {
             String line;
             while (!(line = in.readLine()).equals("") || keepConected) {
@@ -153,6 +157,7 @@ public class ThreadedWebHandler extends Thread implements Observer {
             /* Update punctuation */
             Player p = (Player) o1;
             msg = "PTS;" + player.getId() + ";" + player.getPoints();
+            System.err.println(msg);
             this.sendMessage(msg);
         }
 
@@ -161,4 +166,5 @@ public class ThreadedWebHandler extends Thread implements Observer {
     private void sendMessage(String msg) {
         this.out.println(msg);
     }
+    
 }

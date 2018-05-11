@@ -33,6 +33,9 @@ public class OnlineController extends AbstractController {
     int idClient;
     int operation;
 
+    int points;
+    int idOriginComm;
+
     public OnlineController(Socket s) {
         super();
         operation = 0;
@@ -47,7 +50,7 @@ public class OnlineController extends AbstractController {
 
     public void start() {
         try {
-      
+
             System.out.print("Cliente ee " + id + "\n");
             String line;
             while (!(line = in.readLine()).equals("")) {
@@ -70,9 +73,10 @@ public class OnlineController extends AbstractController {
     public void parseAction(String line) {
         String s = line;
         String[] instruction = s.split(";");
-        
+
         switch (instruction[0]) {
             case "DRAW": {
+                System.out.println(line);
                 posX = Integer.parseInt(instruction[2]);
                 posY = Integer.parseInt(instruction[3]);
                 colorToDraw = new Color(Integer.parseInt(instruction[4]));
@@ -81,9 +85,18 @@ public class OnlineController extends AbstractController {
                 this.notifyObservers();
                 break;
             }
-            
-            case "IDC" : {
+
+            case "IDC": {
                 this.idClient = Integer.parseInt(instruction[1]);
+                break;
+            }
+
+            case "PTS": {
+                this.idOriginComm = Integer.parseInt(instruction[1]);
+                this.points = Integer.parseInt(instruction[2]);
+                this.operation = 2;
+                this.setChanged();
+                this.notifyObservers();
                 break;
             }
 
@@ -109,10 +122,8 @@ public class OnlineController extends AbstractController {
      *
      *
      * @return operation * 0 = No Action * 1 = Draw Cell * 2 = Update Points
-     * 
+     *
      */
-    
-    
     public int getOperation() {
         return this.operation;
     }
@@ -127,6 +138,18 @@ public class OnlineController extends AbstractController {
 
     public Color getColorToDraw() {
         return colorToDraw;
+    }
+
+    public int getIdClient() {
+        return idClient;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public int getIdOriginComm() {
+        return idOriginComm;
     }
 
 }

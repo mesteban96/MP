@@ -96,6 +96,10 @@ public class InternalSnakeState extends Observable {
         numPlayers++;
         alivePlayers++;
 
+        this.operation = 5;
+        this.setChanged();
+        this.notifyObservers(player);
+
     }
 
     private void removePlayer(Player player) {
@@ -103,9 +107,9 @@ public class InternalSnakeState extends Observable {
         for (Point p : player.getSnake()) {
             this.drawCell(new Point(p.x, p.y), Color.WHITE, player.id);
         }
-        
+
         player.setAlive(false);
-        
+
     }
 
     public void initGame() {
@@ -135,7 +139,7 @@ public class InternalSnakeState extends Observable {
         numPlayers = nplayers;
         alivePlayers = nplayers;
 
-        drawCell(new Point(reward.x, reward.y), Color.white , -1);
+        drawCell(new Point(reward.x, reward.y), Color.white, -1);
         reward = new Point();
         moveReward();
 
@@ -176,8 +180,6 @@ public class InternalSnakeState extends Observable {
 
         /* Paint the last cell in color */
         drawCell(player.getSnake().get(0), player.getColor(), player.getId());
-
-        
 
         newHead.x = player.getSnake().get(0).x + player.getSpeedX();
         newHead.y = player.getSnake().get(0).y + player.getSpeedY();
@@ -239,7 +241,7 @@ public class InternalSnakeState extends Observable {
     /* Return true if the snake collides with a point */
     public static boolean checkSnakeCollition(Collection<Player> players, Point pos) {
         for (Player player : players) {
-            if (player.isAlive && player.isConnected && player.getSnake().contains(pos)  ) {
+            if (player.isAlive && player.isConnected && player.getSnake().contains(pos)) {
                 return true;
             }
         }
@@ -289,9 +291,24 @@ public class InternalSnakeState extends Observable {
     public synchronized Point getReward() {
         return this.reward;
     }
-    
-    public Collection<Player> getPlayers () {
+
+    public Collection<Player> getPlayers() {
         return this.players.values();
+    }
+
+    public void sendActualState() {
+
+        /* Send Players points */
+        for (Player player : players.values()) {
+            this.operation = 5;
+            this.setChanged();
+            this.notifyObservers(player);
+        }
+
+        /* Send reward position */
+        if (reward != null) {
+            drawCell(new Point(reward.x, reward.y), Color.BLUE, -1);
+        }
     }
 
 }

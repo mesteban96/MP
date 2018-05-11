@@ -24,9 +24,11 @@ public class ClientOnline {
         /*PuntuationFrame pointsFrame = new PuntuationFrame(x + size + 50, y, );
         controller.addObserver(pointsFrame);
         pointsFrame.init();*/
-        
+        PuntuationFrame puntuationFrame = new PuntuationFrame(x + size + 10, y, controller);
         ApplicationFrame guiFrame = new ApplicationFrame(x, y, size, panelSize, controller);
+        puntuationFrame.init();
         guiFrame.init();
+        
         controller.start();
     }
 }
