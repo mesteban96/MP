@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package practica_2;
+package Server.Model;
 
 import Server.Model.InternalSnakeState;
 import Client.GUI.ApplicationFrame;
@@ -78,7 +78,7 @@ public class RunnableSnake implements Runnable {
             try {
                 internalSnake.moveSnakes();
                 /* Less number == higherSpeed*/
-                Thread.sleep(100);
+                Thread.sleep(500);
             } catch (InterruptedException ex) {
                 Logger.getLogger(ApplicationFrame.class.getName()).log(Level.SEVERE, null, ex);
             }

@@ -93,7 +93,7 @@ public class ThreadedWebHandler extends Thread implements Observer {
             case "DIR": {
                 Integer[] speed = new Integer[2];
                 int id = Integer.parseInt(instruction[1]);
-                System.out.println(s + " " + player.getId() + " " + id);
+                
                 if (player.getId() == id) {
                     switch (instruction[2]) {
                         case "ARRIBA": {
@@ -122,7 +122,6 @@ public class ThreadedWebHandler extends Thread implements Observer {
                             break;
                         }
                     }
-                    System.err.println(speed[0] + " " + speed[1]);
                     controller.move(speed[0], speed[1]);
                 }
                 break;

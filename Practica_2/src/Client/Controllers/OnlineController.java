@@ -69,7 +69,6 @@ public class OnlineController extends AbstractController {
 
     public void parseAction(String line) {
         String s = line;
-        System.out.println(s);
         String[] instruction = s.split(";");
         
         switch (instruction[0]) {
@@ -110,7 +109,10 @@ public class OnlineController extends AbstractController {
      *
      *
      * @return operation * 0 = No Action * 1 = Draw Cell * 2 = Update Points
+     * 
      */
+    
+    
     public int getOperation() {
         return this.operation;
     }

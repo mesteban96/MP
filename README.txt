@@ -5,7 +5,7 @@ Errores y cosas a mejorar:
 	- Quitar todo lo que sobra del modo un jugador y dejarlo solo online como piden. [v]
 	- Añadir el tablón de puntuaciones. []
 	- Que cuando se conecte un jugador a la partida se le envie la posicion del premio. []
-	- Que se maneje bien cuando un jugador muere (que se mande borrar todo su cuerpo for exampol) [Errores porque se reinicia la partida cuando muere uno]
+	- Que se maneje bien cuando un jugador muere (que se mande borrar todo su cuerpo for exampol) [v]
 	- Añadir mensajes en los controles de errores para informar al usuario de lo que ha pasado. []
 	- Añadir boton de acabar partida en cliente y que se desconecte en el servidor. []
 	- Poner mas de un tesoro con tiempos aleatorios (?) []

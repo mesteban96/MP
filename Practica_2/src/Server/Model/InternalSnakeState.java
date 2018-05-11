@@ -18,7 +18,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import practica_2.RunnableSnake;
 
 /**
  *
@@ -104,8 +103,7 @@ public class InternalSnakeState extends Observable {
         for (Point p : player.getSnake()) {
             this.drawCell(new Point(p.x, p.y), Color.WHITE, player.id);
         }
-        player.setSpeedX(0);
-        player.setSpeedY(0);
+        
         player.setAlive(false);
         
     }
@@ -127,7 +125,6 @@ public class InternalSnakeState extends Observable {
     }
 
     private void restartGame() {
-       System.err.println("RESTARTED!!");
         snakeMover.pause();
         this.operation = 1;
         setChanged();
@@ -242,7 +239,7 @@ public class InternalSnakeState extends Observable {
     /* Return true if the snake collides with a point */
     public static boolean checkSnakeCollition(Collection<Player> players, Point pos) {
         for (Player player : players) {
-            if (player.getSnake().contains(pos) && player.isAlive && player.isConnected) {
+            if (player.isAlive && player.isConnected && player.getSnake().contains(pos)  ) {
                 return true;
             }
         }

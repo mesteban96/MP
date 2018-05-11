@@ -85,7 +85,7 @@ public class Player {
     }
 
     void setAlive(boolean b) {
-        this.isAlive = true;
+        this.isAlive = b;
     }
 
     public void disconnect() {
