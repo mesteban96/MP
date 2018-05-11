@@ -36,13 +36,19 @@ public class OnlineController extends AbstractController {
     int points;
     int idOriginComm;
 
-    public OnlineController(Socket s) {
+    boolean persona;
+
+    public OnlineController(Socket s, boolean persona) {
         super();
         operation = 0;
+        this.persona = persona;
         try {
             this.socket = s;
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
+            
+            
+            
         } catch (IOException ex) {
             System.err.println(ex);
             disconnect();
@@ -51,8 +57,7 @@ public class OnlineController extends AbstractController {
 
     public void start() {
         try {
-
-            System.out.print("Cliente ee " + id + "\n");
+            
             String line;
             while (!(line = in.readLine()).equals("")) {
                 parseAction(line);
@@ -84,6 +89,8 @@ public class OnlineController extends AbstractController {
 
             case "IDC": {
                 this.idClient = Integer.parseInt(instruction[1]);
+                String type = persona ? "PER" : "ORD";
+                out.println("PLY;" + type);
                 break;
             }
 
@@ -105,13 +112,15 @@ public class OnlineController extends AbstractController {
 
     @Override
     public void move(int dirX, int dirY) {
-        String msg = "DIR;" + this.idClient + ";";
-        if (dirX != 0) {
-            msg += (dirX == 1) ? "DER" : "IZQ";
-        } else if (dirY != 0) {
-            msg += (dirY == 1) ? "ABAJO" : "ARRIBA";
+        if (persona) {
+            String msg = "DIR;" + this.idClient + ";";
+            if (dirX != 0) {
+                msg += (dirX == 1) ? "DER" : "IZQ";
+            } else if (dirY != 0) {
+                msg += (dirY == 1) ? "ABAJO" : "ARRIBA";
+            }
+            out.println(msg);
         }
-        out.println(msg);
     }
 
     /**

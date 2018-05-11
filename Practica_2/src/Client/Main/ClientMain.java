@@ -22,9 +22,8 @@ public class ClientMain {
      */
     public static void main(String[] args) throws IOException {
 
-        //String ip = (String) JOptionPane.showInputDialog("Introduzca la IP a la que se quiera conectar", "127.0.0.1");
+        String ip = (String) JOptionPane.showInputDialog("Introduzca la IP a la que se quiera conectar", "127.0.0.1");
 
-        String ip ="127.0.0.1";
         try {
             Socket s = new Socket(ip, 8000);
             ClientOnline client = new ClientOnline(100, 0, 800, 20, s);

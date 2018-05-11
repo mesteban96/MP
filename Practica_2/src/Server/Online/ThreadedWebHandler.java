@@ -6,6 +6,7 @@
 package Server.Online;
 
 import Server.Controller.AbstractController;
+import Server.Controller.AutomaticController;
 import Server.Controller.HumanController;
 import Server.Model.InternalSnakeState;
 import Server.Model.Player;
@@ -48,17 +49,24 @@ public class ThreadedWebHandler extends Thread implements Observer {
             keepConected = true;
             internalSnakeState = internal;
 
-            player = new Player(idclient);
-            internalSnakeState.addPlayer(player);
-
-            controller = new HumanController(internalSnakeState, player);
-            internalSnakeState.addObserver(this);
-
             in = new BufferedReader(new InputStreamReader(incoming.getInputStream()));
             out = new PrintWriter(incoming.getOutputStream(), true);
 
             System.out.println("Cliente " + idclient);
             out.println("IDC;" + idclient);
+
+            player = new Player(idclient);
+            
+            String line;
+            line = in.readLine(); 
+            parseAction(line);
+
+            
+            internalSnakeState.addPlayer(player);
+
+            
+            internalSnakeState.addObserver(this);
+
         } catch (IOException ex) {
             Logger.getLogger(ThreadedWebHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -66,9 +74,9 @@ public class ThreadedWebHandler extends Thread implements Observer {
 
     @Override
     public void run() {
-        
+
         internalSnakeState.sendActualState();
-        
+
         try {
             String line;
             while (keepConected && !(line = in.readLine()).equals("")) {
@@ -97,7 +105,7 @@ public class ThreadedWebHandler extends Thread implements Observer {
             case "DIR": {
                 Integer[] speed = new Integer[2];
                 int id = Integer.parseInt(instruction[1]);
-                
+
                 if (player.getId() == id) {
                     switch (instruction[2]) {
                         case "ARRIBA": {
@@ -130,6 +138,18 @@ public class ThreadedWebHandler extends Thread implements Observer {
                 }
                 break;
             }
+            
+            case "PLY" : {
+                if (instruction[1].equals("PER")) {
+                    controller = new HumanController(internalSnakeState, player);
+                } else {
+                    controller = new AutomaticController(internalSnakeState, player);
+                    internalSnakeState.addObserver((AutomaticController) controller);
+                    ((AutomaticController) controller).start();
+                }
+                
+                break;
+            }
 
             case "FIN": {
                 int idRec = Integer.parseInt(instruction[1]);
@@ -155,7 +175,7 @@ public class ThreadedWebHandler extends Thread implements Observer {
         String msg;
 
         if (op == 2) {
-            
+
             /* Send paint a cell */
             int id = (int) o1;
 
@@ -176,5 +196,5 @@ public class ThreadedWebHandler extends Thread implements Observer {
     private void sendMessage(String msg) {
         this.out.println(msg);
     }
-    
+
 }

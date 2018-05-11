@@ -41,9 +41,11 @@ public class AutomaticController extends AbstractController implements Observer 
 
     @Override
     public void update(Observable o, Object o1) {
-        Integer op = (Integer) o1;
-        if (op != null && op == 4) {
-            automaticPlayer.resume();
+        if (o1 instanceof Integer) {
+            Integer op = (Integer) o1;
+            if (op != null && op == 4) {
+                automaticPlayer.resume();
+            }
         }
     }
 }
