@@ -76,7 +76,6 @@ public class OnlineController extends AbstractController {
 
         switch (instruction[0]) {
             case "DRAW": {
-                System.out.println(line);
                 posX = Integer.parseInt(instruction[2]);
                 posY = Integer.parseInt(instruction[3]);
                 colorToDraw = new Color(Integer.parseInt(instruction[4]));

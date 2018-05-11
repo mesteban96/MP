@@ -56,10 +56,7 @@ public class PuntuationFrame extends JFrame implements Observer {
         observated.addObserver(this);
 
         panel.setLayout(null);
-        for (int i = 0; i < this.numberPlayers; i++) {
-
-            System.out.println(i);
-        }
+        
         this.getContentPane().add(panel);
         this.setVisible(true);
     }
@@ -80,6 +77,7 @@ public class PuntuationFrame extends JFrame implements Observer {
         panel.add(colorPanel);
         panel.add(label);
 
+        
         numberPlayers++;
 
     }
@@ -104,8 +102,11 @@ public class PuntuationFrame extends JFrame implements Observer {
                 } else {
                     pointsMap.get(controller.getIdOriginComm()).setText(aditionalInfo + " ID :" + controller.getIdOriginComm() + " Points: " + controller.getPoints());
                 }
+                
+                this.paint(this.getGraphics());
             }
         }
+        
     }
 
 }

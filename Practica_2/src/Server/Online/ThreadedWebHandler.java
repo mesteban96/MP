@@ -156,7 +156,7 @@ public class ThreadedWebHandler extends Thread implements Observer {
         if (op == 5) {
             /* Update punctuation */
             Player p = (Player) o1;
-            msg = "PTS;" + player.getId() + ";" + player.getPoints();
+            msg = "PTS;" + p.getId() + ";" + p.getPoints();
             System.err.println(msg);
             this.sendMessage(msg);
         }
