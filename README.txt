@@ -6,7 +6,8 @@ Errores y cosas a mejorar:
 	- Añadir el tablón de puntuaciones. [v]
 	- Que cuando se conecte un jugador a la partida se le envie la posicion del premio. [v]
 	- Que se maneje bien cuando un jugador muere (que se mande borrar todo su cuerpo for exampol) [v]
-	- Añadir boton de acabar partida en cliente y que se desconecte en el servidor. []
+
+	- Añadir boton de acabar partida en cliente y que se desconecte en el servidor. [v]
 
 	- Añadir mensajes en los controles de errores para informar al usuario de lo que ha pasado. []
 	- Poner mas de un tesoro con tiempos aleatorios (?) []

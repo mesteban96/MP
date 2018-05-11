@@ -71,7 +71,7 @@ public class ThreadedWebHandler extends Thread implements Observer {
         
         try {
             String line;
-            while (!(line = in.readLine()).equals("") || keepConected) {
+            while (keepConected && !(line = in.readLine()).equals("")) {
                 parseAction(line);
             }
 
@@ -132,7 +132,16 @@ public class ThreadedWebHandler extends Thread implements Observer {
             }
 
             case "FIN": {
-
+                int idRec = Integer.parseInt(instruction[1]);
+                if (idRec == idclient) {
+                    this.player.disconnect();
+                    this.internalSnakeState.removePlayer(player);
+                    this.internalSnakeState.restarAlivePlayers();
+                    this.keepConected = false;
+                    if (internalSnakeState.getAlivePlayers() < 2) {
+                        internalSnakeState.restartGame();
+                    }
+                }
                 break;
             }
         }
@@ -146,6 +155,7 @@ public class ThreadedWebHandler extends Thread implements Observer {
         String msg;
 
         if (op == 2) {
+            
             /* Send paint a cell */
             int id = (int) o1;
 

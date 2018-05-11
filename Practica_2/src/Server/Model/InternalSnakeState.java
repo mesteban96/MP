@@ -102,7 +102,7 @@ public class InternalSnakeState extends Observable {
 
     }
 
-    private void removePlayer(Player player) {
+    public void removePlayer(Player player) {
 
         for (Point p : player.getSnake()) {
             this.drawCell(new Point(p.x, p.y), Color.WHITE, player.id);
@@ -128,16 +128,14 @@ public class InternalSnakeState extends Observable {
         }
     }
 
-    private void restartGame() {
+    public void restartGame() {
         snakeMover.pause();
         this.operation = 1;
         setChanged();
         notifyObservers();
-        int nplayers = numPlayers;
+       
         restartPlayers();
         restartSnakes();
-        numPlayers = nplayers;
-        alivePlayers = nplayers;
 
         drawCell(new Point(reward.x, reward.y), Color.white, -1);
         reward = new Point();
@@ -309,6 +307,14 @@ public class InternalSnakeState extends Observable {
         if (reward != null) {
             drawCell(new Point(reward.x, reward.y), Color.BLUE, -1);
         }
+    }
+    
+    public int getAlivePlayers () {
+        return this.alivePlayers;
+    }
+    
+    public void restarAlivePlayers () {
+        this.alivePlayers--;
     }
 
 }

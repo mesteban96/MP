@@ -22,14 +22,13 @@ import Client.Controllers.OnlineController;
 import Server.Model.InternalSnakeState;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.JButton;
 
 /**
  *
  * @author ivan
  */
 public class PuntuationFrame extends JFrame implements Observer {
-
-    private AbstractController controller;
 
     private int numberPlayers;
     private JPanel panel;
@@ -57,6 +56,15 @@ public class PuntuationFrame extends JFrame implements Observer {
 
         panel.setLayout(null);
         
+        JButton disconnectBtn = new JButton("Disconnect");
+        disconnectBtn.setLocation(60, 10);
+        disconnectBtn.setSize(200, 40);
+        disconnectBtn.addActionListener((ae) -> {
+            OnlineController controller = (OnlineController) observated;
+            controller.disconnect();
+        });
+        this.panel.add(disconnectBtn);
+        
         this.getContentPane().add(panel);
         this.setVisible(true);
     }
@@ -64,13 +72,13 @@ public class PuntuationFrame extends JFrame implements Observer {
     private void addPlayer(int id, int points, int pos, String aditionalInfo) {
 
         JLabel label = new JLabel(aditionalInfo + " ID :" + id + " Points: " + points);
-        label.setLocation(60, 50 * numberPlayers + 10);
+        label.setLocation(60, 50 * pos + 10);
         label.setSize(200, 30);
         
         pointsMap.put(id, label);
         JPanel colorPanel = new JPanel();
         colorPanel.setSize(30, 30);
-        colorPanel.setLocation(10, 50 * numberPlayers + 10);
+        colorPanel.setLocation(10, 50 * pos + 10);
         colorPanel.setBackground(Color.WHITE);
         colorsPanel.add(colorPanel);
 
@@ -90,11 +98,11 @@ public class PuntuationFrame extends JFrame implements Observer {
             OnlineController controller = (OnlineController) o;
             if (controller.getOperation() == 2) {
                 String aditionalInfo = "";
-                int pos = numberPlayers + 1;
+                int pos = numberPlayers + 2;
                 
                 if (controller.getIdOriginComm() == controller.getIdClient()) {
                     aditionalInfo = "Your points: ";
-                    pos = 0;
+                    pos = 1;
                 }
 
                 if (!pointsMap.containsKey(controller.getIdOriginComm())) {

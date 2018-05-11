@@ -44,7 +44,8 @@ public class OnlineController extends AbstractController {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
         } catch (IOException ex) {
-            Logger.getLogger(OnlineController.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex);
+            disconnect();
         }
     }
 
@@ -60,13 +61,8 @@ public class OnlineController extends AbstractController {
         } catch (IOException ex) {
             System.out.println(ex);
         } finally {
-            try {
-                in.close();
-                out.close();
-                socket.close();
-            } catch (IOException ex) {
-                System.out.println(ex.getMessage());
-            }
+            disconnect();
+
         }
     }
 
@@ -76,6 +72,7 @@ public class OnlineController extends AbstractController {
 
         switch (instruction[0]) {
             case "DRAW": {
+                System.out.println(s);
                 posX = Integer.parseInt(instruction[2]);
                 posY = Integer.parseInt(instruction[3]);
                 colorToDraw = new Color(Integer.parseInt(instruction[4]));
@@ -149,6 +146,19 @@ public class OnlineController extends AbstractController {
 
     public int getIdOriginComm() {
         return idOriginComm;
+    }
+
+    public void disconnect() {
+        try {
+            out.println("FIN;" + idClient);
+            in.close();
+            out.close();
+            socket.close();
+        } catch (IOException ex) {
+            Logger.getLogger(OnlineController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            System.exit(0);
+        }
     }
 
 }
