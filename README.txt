@@ -15,6 +15,9 @@ Errores y cosas a mejorar:
 
 
 	- Poner mas de un tesoro con tiempos aleatorios (?) []
+
+	- Manejar mejor los errores de desconexion en ambos extremos []
+
 	- Añadir mensajes en los controles de errores para informar al usuario de lo que ha pasado. []
 	
 	- Consola en el servidor con informacion adicional []
