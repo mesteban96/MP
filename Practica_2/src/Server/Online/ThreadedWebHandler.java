@@ -56,15 +56,13 @@ public class ThreadedWebHandler extends Thread implements Observer {
             out.println("IDC;" + idclient);
 
             player = new Player(idclient);
-            
+
             String line;
-            line = in.readLine(); 
+            line = in.readLine();
             parseAction(line);
 
-            
             internalSnakeState.addPlayer(player);
 
-            
             internalSnakeState.addObserver(this);
 
         } catch (IOException ex) {
@@ -87,7 +85,13 @@ public class ThreadedWebHandler extends Thread implements Observer {
             System.out.println(ex);
         } finally {
             try {
-                //player.disconnect();
+                this.player.disconnect();
+                this.internalSnakeState.removePlayer(player);
+                this.internalSnakeState.restarAlivePlayers();
+                this.keepConected = false;
+                if (internalSnakeState.getAlivePlayers() < 2) {
+                    internalSnakeState.restartGame();
+                }
                 in.close();
                 out.close();
                 incoming.close();
@@ -138,8 +142,8 @@ public class ThreadedWebHandler extends Thread implements Observer {
                 }
                 break;
             }
-            
-            case "PLY" : {
+
+            case "PLY": {
                 if (instruction[1].equals("PER")) {
                     controller = new HumanController(internalSnakeState, player);
                 } else {
@@ -147,23 +151,27 @@ public class ThreadedWebHandler extends Thread implements Observer {
                     internalSnakeState.addObserver((AutomaticController) controller);
                     ((AutomaticController) controller).start();
                 }
-                
+
                 break;
             }
 
             case "FIN": {
                 int idRec = Integer.parseInt(instruction[1]);
                 if (idRec == idclient) {
-                    this.player.disconnect();
-                    this.internalSnakeState.removePlayer(player);
-                    this.internalSnakeState.restarAlivePlayers();
-                    this.keepConected = false;
-                    if (internalSnakeState.getAlivePlayers() < 2) {
-                        internalSnakeState.restartGame();
-                    }
+                    disconnect();
                 }
                 break;
             }
+        }
+    }
+
+    private void disconnect() {
+        this.player.disconnect();
+        this.internalSnakeState.removePlayer(player);
+        this.internalSnakeState.restarAlivePlayers();
+        this.keepConected = false;
+        if (internalSnakeState.getAlivePlayers() < 2) {
+            internalSnakeState.restartGame();
         }
     }
 
@@ -181,14 +189,15 @@ public class ThreadedWebHandler extends Thread implements Observer {
 
             msg = "DRAW;" + id + ";" + internalSnake.getCellToDraw().x + ";" + internalSnake.getCellToDraw().y + ";" + internalSnake.getCellColor().getRGB();
             this.sendMessage(msg);
-        }
+        } else {
 
-        if (op == 5) {
-            /* Update punctuation */
-            Player p = (Player) o1;
-            msg = "PTS;" + p.getId() + ";" + p.getPoints();
-            System.err.println(msg);
-            this.sendMessage(msg);
+            if (op == 5) {
+                /* Update punctuation */
+                Player p = (Player) o1;
+                msg = "PTS;" + p.getId() + ";" + p.getPoints();
+                System.err.println(msg);
+                this.sendMessage(msg);
+            }
         }
 
     }
