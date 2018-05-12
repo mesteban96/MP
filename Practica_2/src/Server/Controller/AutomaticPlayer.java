@@ -5,11 +5,7 @@
  */
 package Server.Controller;
 
-import Client.Controllers.*;
 import java.awt.Point;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 import Server.Model.InternalSnakeState;
 import Server.Model.Player;
 import java.util.Collection;

@@ -5,7 +5,6 @@
  */
 package Server.Controller;
 
-import Client.Controllers.*;
 import java.util.Observable;
 import java.util.Observer;
 import Server.Model.InternalSnakeState;

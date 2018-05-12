@@ -5,11 +5,8 @@
  */
 package Server.Controller;
 
-import Client.Controllers.*;
 import Server.Model.InternalSnakeState;
 import Server.Model.Player;
-import Server.Online.ThreadedWebHandler;
-import java.util.Observable;
 
 /**
  *

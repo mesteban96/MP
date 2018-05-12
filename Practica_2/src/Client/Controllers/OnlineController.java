@@ -5,7 +5,6 @@
  */
 package Client.Controllers;
 
-import Server.Model.InternalSnakeState;
 import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,7 +13,6 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.Observable;
 
 /**
  *

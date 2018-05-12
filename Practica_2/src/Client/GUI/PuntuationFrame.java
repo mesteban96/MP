@@ -6,20 +6,14 @@
 package Client.GUI;
 
 import java.awt.Color;
-import java.awt.LayoutManager;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import Client.Controllers.AbstractController;
 import Client.Controllers.OnlineController;
-import Server.Model.InternalSnakeState;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JButton;

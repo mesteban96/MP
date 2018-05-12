@@ -5,10 +5,8 @@
  */
 package Server.Controller;
 
-import Client.Controllers.*;
 import Server.Model.InternalSnakeState;
 import Server.Model.Player;
-import java.util.Observer;
 
 /**
  *

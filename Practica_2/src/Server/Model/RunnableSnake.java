@@ -5,8 +5,6 @@
  */
 package Server.Model;
 
-import Server.Model.InternalSnakeState;
-import Client.GUI.ApplicationFrame;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -80,7 +78,7 @@ public class RunnableSnake implements Runnable {
                 /* Less number == higherSpeed*/
                 Thread.sleep(100);
             } catch (InterruptedException ex) {
-                Logger.getLogger(ApplicationFrame.class.getName()).log(Level.SEVERE, null, ex);
+                System.err.println(ex.getMessage());
             }
         }
     }
