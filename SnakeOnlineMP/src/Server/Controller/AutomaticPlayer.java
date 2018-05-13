@@ -77,25 +77,24 @@ public class AutomaticPlayer implements Runnable {
         Integer[] speed = player.getSpeed();
 
         speed = this.pointToReward(reward, player.getSnake().get(0), speed);
-        
+
         speed = correctMovement(players, speed, player.getSnake().get(0));
-        
+
         this.automaticContoller.move(speed[0], speed[1]);
         this.pause();
-        
+
     }
-    
-    
-    private Integer [] correctMovement (Collection <Player> players, Integer[] speed, Point head) {
-        Point newHead = new Point ();
+
+    private Integer[] correctMovement(Collection<Player> players, Integer[] speed, Point head) {
+        Point newHead = new Point();
         boolean collides;
         int paso = 0;
-        do {   
+        do {
             newHead.x = head.x + speed[0];
             newHead.y = head.y + speed[1];
-            if (InternalSnakeState.checkSnakeCollition(players, newHead)){
-                if (paso % 2 == 0){
-                    speed[0] = paso-1;
+            if (InternalSnakeState.checkSnakeCollition(players, newHead)) {
+                if (paso % 2 == 0) {
+                    speed[0] = paso - 1;
                     speed[1] = 0;
                 } else {
                     speed[0] = 0;
@@ -106,13 +105,12 @@ public class AutomaticPlayer implements Runnable {
                 collides = false;
             }
             paso++;
-        } while (collides && paso <4);
-            
+        } while (collides && paso < 4);
+
         return speed;
     }
-    
-    
-    private Integer [] pointToReward(Point reward, Point head, Integer[] speed) {
+
+    private Integer[] pointToReward(Point reward, Point head, Integer[] speed) {
         /* No puede cambiar la speed[x], solo a 0*/
         if (speed[0] != 0) {
             if (reward.y != head.y) {
@@ -120,7 +118,7 @@ public class AutomaticPlayer implements Runnable {
                 speed[0] = 0;
             }
         } else {
-            
+
             if (reward.x != head.x) {
                 speed[0] = (reward.x < head.x) ? -1 : 1;
                 speed[1] = 0;

@@ -16,7 +16,6 @@ public class RunnableSnake implements Runnable {
 
     private InternalSnakeState internalSnake;
     private volatile boolean isAlive;
-    Thread timer;
 
     private volatile boolean paused = false;
     private final Object pauseLock = new Object();
@@ -25,17 +24,6 @@ public class RunnableSnake implements Runnable {
         internalSnake = snake;
         isAlive = true;
 
-        timer = new Thread(() -> {
-            try {
-                this.internalSnake.setTime(0);
-                while (true) {
-                    this.internalSnake.increaseTime(100);
-                    Thread.sleep(100);
-                }
-            } catch (InterruptedException ex) {
-                Logger.getLogger(InternalSnakeState.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
     }
 
     public synchronized void finish() {
@@ -48,7 +36,7 @@ public class RunnableSnake implements Runnable {
 
     @Override
     public synchronized void run() {
-        this.timer.start();
+
         while (isAlive) {
 
             synchronized (pauseLock) {
@@ -71,7 +59,7 @@ public class RunnableSnake implements Runnable {
                     if (!isAlive) { // running might have changed since we paused
                         break;
                     }
-                } 
+                }
             }
             try {
                 internalSnake.moveSnakes();

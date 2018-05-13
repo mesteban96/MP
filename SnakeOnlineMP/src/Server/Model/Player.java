@@ -39,7 +39,7 @@ public class Player {
         speed[1] = 0;
         color = new Color((float) Math.random() * 0.8f, (float) Math.random() * 0.8f, (float) Math.random() * 0.8f);
     }
-    
+
     public void restart() {
         isAlive = true;
         speed[0] = 1;
@@ -60,7 +60,7 @@ public class Player {
         return this.id;
     }
 
-    public List <Point> getSnake() {
+    public List<Point> getSnake() {
         return this.snake;
     }
 
@@ -71,8 +71,8 @@ public class Player {
     public Integer getSpeedY() {
         return speed[1];
     }
-    
-    public Integer [] getSpeed() {
+
+    public Integer[] getSpeed() {
         return this.speed;
     }
 
@@ -95,25 +95,25 @@ public class Player {
     public Color getColor() {
         return this.color;
     }
-    
+
     public int increasePoints(int points) {
         this.points += points;
         return this.points;
     }
-    
-    public boolean isAlive () {
+
+    public boolean isAlive() {
         return isAlive;
     }
-    
-    public boolean isConnected () {
+
+    public boolean isConnected() {
         return this.isConnected;
     }
-    
-    public int size () {
+
+    public int size() {
         return this.snake.size();
     }
-    
-    public int getPoints () {
+
+    public int getPoints() {
         return this.points;
     }
 

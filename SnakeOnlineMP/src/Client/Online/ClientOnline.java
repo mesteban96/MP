@@ -17,8 +17,10 @@ import javax.swing.JOptionPane;
  */
 public class ClientOnline {
 
-    public ClientOnline(int x, int y, int size, int panelSize, Socket s) {
+    private int x, y, size, panelSize;
+    private Socket s;
 
+    public ClientOnline(int x, int y, int size, int panelSize, Socket s) {
         String seleccion = (String) JOptionPane.showInputDialog(
                 null,
                 "Seleccione opcion",
@@ -27,7 +29,7 @@ public class ClientOnline {
                 null, // null para icono defecto
                 new Object[]{"PERSONA", "ORDENADOR"},
                 "PERSONA");
-        
+
         boolean persona = "PERSONA".equals(seleccion);
 
         OnlineController controller = new OnlineController(s, persona);
@@ -41,4 +43,5 @@ public class ClientOnline {
 
         controller.start();
     }
+
 }

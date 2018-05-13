@@ -44,9 +44,7 @@ public class OnlineController extends AbstractController {
             this.socket = s;
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
-            
-            
-            
+
         } catch (IOException ex) {
             System.err.println(ex);
             disconnect();
@@ -55,7 +53,7 @@ public class OnlineController extends AbstractController {
 
     public void start() {
         try {
-            
+
             String line;
             while (!(line = in.readLine()).equals("")) {
                 parseAction(line);
@@ -75,7 +73,6 @@ public class OnlineController extends AbstractController {
 
         switch (instruction[0]) {
             case "DRAW": {
-                System.out.println(s);
                 posX = Integer.parseInt(instruction[2]);
                 posY = Integer.parseInt(instruction[3]);
                 colorToDraw = new Color(Integer.parseInt(instruction[4]));

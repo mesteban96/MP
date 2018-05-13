@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
  * @author ivan
  */
 public class ClientMain {
-    
+
     /**
      * @param args the command line arguments
      */
@@ -27,6 +27,7 @@ public class ClientMain {
         try {
             Socket s = new Socket(ip, 8000);
             ClientOnline client = new ClientOnline(100, 0, 800, 20, s);
+            
         } catch (ConnectException e) {
             JOptionPane.showMessageDialog(null,
                     "Error al intentar conectar con el servidor " + ip + " en el puerto 8000",

@@ -32,8 +32,6 @@ public class InternalSnakeState extends Observable {
 
     private RunnableSnake snakeMover;
 
-    private Double time;
-
     private int numPlayers;
 
     private List<Boolean> isAlive;
@@ -58,7 +56,6 @@ public class InternalSnakeState extends Observable {
     private void restartPlayers() {
         this.numPlayers = 0;
         this.alivePlayers = 0;
-        List<Player> toRemove = new ArrayList<>();
 
         for (Player player : players.values()) {
             if (player.isConnected) {
@@ -78,7 +75,6 @@ public class InternalSnakeState extends Observable {
             }
         }
          */
-        this.time = 0d;
     }
 
     public void addPlayer(Player player) {
@@ -130,7 +126,7 @@ public class InternalSnakeState extends Observable {
         this.operation = 1;
         setChanged();
         notifyObservers();
-       
+
         restartPlayers();
         restartSnakes();
 
@@ -268,21 +264,6 @@ public class InternalSnakeState extends Observable {
         drawCell(reward, Color.BLUE, -1);
     }
 
-    public synchronized void increaseTime(double time) {
-        this.operation = 3;
-        this.time += time / 1000;
-        setChanged();
-        notifyObservers();
-    }
-
-    public synchronized double getTime() {
-        return (double) Math.round(this.time * 1000d) / 1000d;
-    }
-
-    public synchronized void setTime(double time) {
-        this.time = time;
-    }
-
     public synchronized Point getReward() {
         return this.reward;
     }
@@ -305,12 +286,12 @@ public class InternalSnakeState extends Observable {
             drawCell(new Point(reward.x, reward.y), Color.BLUE, -1);
         }
     }
-    
-    public int getAlivePlayers () {
+
+    public int getAlivePlayers() {
         return this.alivePlayers;
     }
-    
-    public void restarAlivePlayers () {
+
+    public void restarAlivePlayers() {
         this.alivePlayers--;
     }
 

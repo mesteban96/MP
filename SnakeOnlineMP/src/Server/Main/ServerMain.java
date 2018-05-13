@@ -12,8 +12,9 @@ import Server.Online.Server;
  * @author ivan
  */
 public class ServerMain {
+
     public static void main(String[] args) {
-        Server server = new Server ();
+        Server server = new Server();
         server.start();
     }
 }

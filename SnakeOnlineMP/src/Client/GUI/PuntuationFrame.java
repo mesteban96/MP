@@ -49,7 +49,7 @@ public class PuntuationFrame extends JFrame implements Observer {
         observated.addObserver(this);
 
         panel.setLayout(null);
-        
+
         JButton disconnectBtn = new JButton("Disconnect");
         disconnectBtn.setLocation(60, 10);
         disconnectBtn.setSize(200, 40);
@@ -58,7 +58,7 @@ public class PuntuationFrame extends JFrame implements Observer {
             controller.disconnect();
         });
         this.panel.add(disconnectBtn);
-        
+
         this.getContentPane().add(panel);
         this.setVisible(true);
     }
@@ -68,7 +68,7 @@ public class PuntuationFrame extends JFrame implements Observer {
         JLabel label = new JLabel(aditionalInfo + " ID :" + id + " Points: " + points);
         label.setLocation(60, 50 * pos + 10);
         label.setSize(200, 30);
-        
+
         pointsMap.put(id, label);
         JPanel colorPanel = new JPanel();
         colorPanel.setSize(30, 30);
@@ -79,21 +79,19 @@ public class PuntuationFrame extends JFrame implements Observer {
         panel.add(colorPanel);
         panel.add(label);
 
-        
         numberPlayers++;
 
     }
 
     @Override
     public void update(Observable o, Object o1) {
-        
-        
+
         if (o instanceof OnlineController) {
             OnlineController controller = (OnlineController) o;
             if (controller.getOperation() == 2) {
                 String aditionalInfo = "";
                 int pos = numberPlayers + 2;
-                
+
                 if (controller.getIdOriginComm() == controller.getIdClient()) {
                     aditionalInfo = "Your points: ";
                     pos = 1;
@@ -104,11 +102,11 @@ public class PuntuationFrame extends JFrame implements Observer {
                 } else {
                     pointsMap.get(controller.getIdOriginComm()).setText(aditionalInfo + " ID :" + controller.getIdOriginComm() + " Points: " + controller.getPoints());
                 }
-                
+
                 this.paint(this.getGraphics());
             }
         }
-        
+
     }
 
 }
