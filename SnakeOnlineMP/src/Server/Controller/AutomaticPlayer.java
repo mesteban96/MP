@@ -112,16 +112,18 @@ public class AutomaticPlayer implements Runnable {
 
     private Integer[] pointToReward(Point reward, Point head, Integer[] speed) {
         /* No puede cambiar la speed[x], solo a 0*/
-        if (speed[0] != 0) {
-            if (reward.y != head.y) {
-                speed[1] = (reward.y < head.y) ? -1 : 1;
-                speed[0] = 0;
-            }
-        } else {
+        if (reward != null && head != null) {
+            if (speed[0] != 0) {
+                if (reward.y != head.y) {
+                    speed[1] = (reward.y < head.y) ? -1 : 1;
+                    speed[0] = 0;
+                }
+            } else {
 
-            if (reward.x != head.x) {
-                speed[0] = (reward.x < head.x) ? -1 : 1;
-                speed[1] = 0;
+                if (reward.x != head.x) {
+                    speed[0] = (reward.x < head.x) ? -1 : 1;
+                    speed[1] = 0;
+                }
             }
         }
         return speed;

@@ -32,8 +32,12 @@ public class Player {
         this.id = idclient;
         isAlive = false;
         isConnected = true;
-
+        this.size = 5;
         this.snake = new ArrayList<>();
+        
+        for(int i = 0; i < size; i++){
+            snake.add(new Point(0, 0));
+        }
         speed = new Integer[2];
         speed[0] = 1;
         speed[1] = 0;
